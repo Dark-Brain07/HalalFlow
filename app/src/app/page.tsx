@@ -266,135 +266,133 @@ function RemitTab() {
     { name: "My Default Zakat", address: defaultZakatAddress }
   ];
   const verifiedCharities = [
-    { name: "Global Relief Fund", address: "0x5FbDB2315678afecb367f032d93F642f64180aa3" },
-    { name: "Water Project", address: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2" }
+    { name: "Global Relief Fund", address: "0x5FbDB2315678afecb367f032d93F642f64180aa3" }
   ];
 
   return (
-    <div className="space-y-4 animate-in slide-in-from-right-4 duration-500 pb-8">
-      <div className="bg-[#ffeb85] rounded-[2rem] p-6 shadow-sm relative z-20">
-        <h2 className="text-2xl font-extrabold text-slate-800 mb-6 flex items-center gap-2">
-          <Send className="text-slate-900" /> Send Remittance
+    <div className="space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
+      <div className="px-2 mb-2">
+        <h2 className="text-3xl font-black text-slate-800 flex items-center gap-3">
+          <div className="w-12 h-12 bg-[#ffeb85] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
+            <Send size={24} className="text-slate-900" />
+          </div>
+          Send Remittance
         </h2>
+      </div>
 
-        <div className="mb-6 relative z-30">
-          <label className="block text-sm font-bold text-slate-700 mb-2">Recipient Address</label>
-          <div className="flex gap-2 mb-2">
-            <input 
-              type="text" 
-              value={recipient}
-              onChange={(e) => setRecipient(e.target.value)}
-              placeholder="0x..." 
-              className="w-full bg-white border-2 border-slate-900 rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
-            />
-            <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
-              <QrCode size={20} />
+      {/* Recipient Box */}
+      <div className="bg-[#ffeb85] rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Recipient Address</label>
+        <div className="flex gap-2 mb-3">
+          <input 
+            type="text" 
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="0x..." 
+            className="w-full bg-white border-2 border-slate-900 rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
+          />
+          <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
+            <QrCode size={20} />
+          </button>
+        </div>
+        
+        <div className="bg-white border-2 border-slate-900 rounded-2xl p-2 max-h-40 overflow-y-auto custom-scrollbar">
+          <p className="text-[10px] font-black text-slate-400 px-3 py-1 uppercase tracking-wider">Saved & Verified</p>
+          {[...savedAddresses, ...verifiedCharities].map((item, i) => (
+            <button key={`saved-${i}`} onClick={() => setRecipient(item.address)} className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors">
+              <p className="text-sm font-bold text-slate-800">{item.name}</p>
+              <p className="text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
             </button>
-          </div>
-          
-          <div className="bg-white border-2 border-slate-900 rounded-2xl p-2 max-h-48 overflow-y-auto mt-2">
-            <p className="text-xs font-bold text-slate-400 px-3 py-1 uppercase">Saved</p>
-            {savedAddresses.map((item, i) => (
-              <button key={`saved-${i}`} onClick={() => setRecipient(item.address)} className="w-full text-left px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                <p className="text-xs font-mono text-slate-500 truncate">{item.address}</p>
-              </button>
-            ))}
-            <div className="h-px w-full bg-slate-200 my-2"></div>
-            <p className="text-xs font-bold text-slate-400 px-3 py-1 uppercase">Verified Charities</p>
-            {verifiedCharities.map((item, i) => (
-              <button key={`charity-${i}`} onClick={() => setRecipient(item.address)} className="w-full text-left px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                <p className="text-xs font-mono text-slate-500 truncate">{item.address}</p>
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-2">Amount (USDm)</label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
-            <input 
-              type="number" 
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00" 
-              className="w-full bg-white border-2 border-slate-900 rounded-2xl p-4 pl-8 text-2xl font-bold text-slate-800 focus:outline-none"
-            />
-          </div>
+      </div>
+
+      {/* Amount Box */}
+      <div className="bg-white rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Amount (USDm)</label>
+        <div className="relative mb-4">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-2xl">$</span>
+          <input 
+            type="number" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.00" 
+            className="w-full bg-slate-50 border-2 border-slate-900 rounded-2xl p-4 pl-9 text-2xl font-black text-slate-800 focus:outline-none focus:bg-white transition-colors"
+          />
         </div>
 
-        <div className="bg-[#a5ebd3] p-4 rounded-2xl space-y-2 text-sm border-2 border-slate-900 mt-6 mb-6">
-          <div className="flex justify-between font-medium text-slate-600">
+        <div className="bg-[#a5ebd3] p-4 rounded-2xl space-y-2 text-sm border-2 border-slate-900">
+          <div className="flex justify-between font-bold text-slate-700">
             <span>Send Amount</span>
             <span>${amount || "0.00"}</span>
           </div>
-          <div className="flex justify-between font-medium text-slate-600">
-            <span>Transparent Flat Fee</span>
-            <span className="font-bold text-slate-800">$0.50</span>
+          <div className="flex justify-between font-bold text-slate-700">
+            <span>Flat Network Fee</span>
+            <span>$0.50</span>
           </div>
-          <div className="h-px w-full bg-slate-200 my-2"></div>
-          <div className="flex justify-between font-bold text-slate-800 text-base">
+          <div className="h-px w-full bg-slate-900/10 my-2"></div>
+          <div className="flex justify-between font-black text-slate-900 text-lg">
             <span>Total to deduct</span>
             <span>${amount ? (parseFloat(amount) + 0.50).toFixed(2) : "0.50"}</span>
           </div>
         </div>
-
-        {needsApproval ? (
-          <button 
-            onClick={() => {
-              if (!amount) return;
-              const totalRequired = (parseFloat(amount) + 0.50).toString();
-              writeApprove({
-                address: USDM_ADDRESS as `0x${string}`,
-                abi: erc20Abi,
-                functionName: 'approve',
-                args: [
-                  REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
-                  parseUnits(totalRequired, 18)
-                ]
-              }, {
-                onSuccess: () => {
-                  alert("Approval successful! You can now send funds.");
-                  setNeedsApproval(false);
-                },
-                onError: (err) => console.error("Approval Failed:", err)
-              });
-            }}
-            disabled={isApprovePending}
-            className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-4 font-bold text-lg flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
-          >
-            {isApprovePending ? "Approving in Wallet..." : "Step 1: Approve USDm"}
-          </button>
-        ) : (
-          <button 
-            onClick={() => {
-              if (!recipient || !amount) return;
-              writeContract({
-                address: REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
-                abi: routerAbi,
-                functionName: 'sendRemittance',
-                args: [
-                  USDM_ADDRESS as `0x${string}`,
-                  recipient as `0x${string}`,
-                  parseUnits(amount, 18),
-                  "0x" // Attribution tag placeholder
-                ]
-              }, {
-                onSuccess: () => {
-                  alert("Transaction Sent!");
-                  setNeedsApproval(true); // reset for demo
-                },
-                onError: (err) => console.error("Tx Failed:", err)
-              });
-            }}
-            disabled={isPending}
-            className="w-full bg-gradient-to-r from-[#87dbfb] to-[#d0a6ff] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-4 font-bold text-lg flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
-          >
-            {isPending ? "Confirm in Wallet..." : <>Step 2: Send Transfer <ArrowRight size={20} /></>}
-          </button>
-        )}
       </div>
+
+      {/* Action Button */}
+      {needsApproval ? (
+        <button 
+          onClick={() => {
+            if (!amount) return;
+            const totalRequired = (parseFloat(amount) + 0.50).toString();
+            writeApprove({
+              address: USDM_ADDRESS as `0x${string}`,
+              abi: erc20Abi,
+              functionName: 'approve',
+              args: [
+                REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
+                parseUnits(totalRequired, 18)
+              ]
+            }, {
+              onSuccess: () => {
+                alert("Approval successful! You can now send funds.");
+                setNeedsApproval(false);
+              },
+              onError: (err) => console.error("Approval Failed:", err)
+            });
+          }}
+          disabled={isApprovePending}
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+        >
+          {isApprovePending ? "Approving..." : "Step 1: Approve USDm"}
+        </button>
+      ) : (
+        <button 
+          onClick={() => {
+            if (!recipient || !amount) return;
+            writeContract({
+              address: REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
+              abi: routerAbi,
+              functionName: 'sendRemittance',
+              args: [
+                USDM_ADDRESS as `0x${string}`,
+                recipient as `0x${string}`,
+                parseUnits(amount, 18),
+                "0x"
+              ]
+            }, {
+              onSuccess: () => {
+                alert("Transaction Sent!");
+                setNeedsApproval(true);
+              },
+              onError: (err) => console.error("Tx Failed:", err)
+            });
+          }}
+          disabled={isPending}
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+        >
+          {isPending ? "Sending..." : <>Step 2: Send <ArrowRight size={24} /></>}
+        </button>
+      )}
     </div>
   );
 }
@@ -428,8 +426,7 @@ function ZakatTab() {
   const zakatDue = (rawBalance * 0.025).toFixed(2);
 
   const verifiedCharities = [
-    { name: "Global Relief Fund", address: "0x5FbDB2315678afecb367f032d93F642f64180aa3" },
-    { name: "Water Project", address: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2" }
+    { name: "Global Relief Fund", address: "0x5FbDB2315678afecb367f032d93F642f64180aa3" }
   ];
 
   const savedAddresses = [
@@ -514,95 +511,89 @@ function ZakatTab() {
   }
 
   return (
-    <div className="space-y-4 animate-in slide-in-from-right-4 duration-500 pb-8">
-      <div className="bg-[#ffa3c1] rounded-[2rem] p-6 shadow-sm relative overflow-visible z-20">
-        
-        <div className="relative z-10 text-center mb-6">
-          <div className="w-16 h-16 mx-auto bg-white rounded-full flex items-center justify-center mb-4 border-4 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] text-2xl">
-            🤲
+    <div className="space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
+      <div className="px-2 mb-2">
+        <h2 className="text-3xl font-black text-slate-800 flex items-center gap-3">
+          <div className="w-12 h-12 bg-[#ffa3c1] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
+            <Heart size={24} className="text-slate-900" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-800 mb-1">Zakat Calculator</h2>
-          
-          <div className="grid grid-cols-2 gap-3 mb-6 mt-4 text-left">
-            <div className="bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Eligible Balance</p>
-              <p className="font-bold text-slate-800">${formattedBalance}</p>
-            </div>
-            <div className="bg-[#ffeb85] border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
-              <p className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-1">Nisab Threshold</p>
-              <p className="font-bold text-slate-900">$980.00</p>
-            </div>
-          </div>
-          
-          <div className="bg-white border-2 border-slate-900 p-5 rounded-2xl flex flex-col items-center">
-            <span className="bg-[#d0a6ff] text-slate-900 border border-slate-900 text-xs font-bold px-3 py-1 rounded-full mb-2">2.5% Due</span>
-            <p className="text-3xl font-black text-rose-600 mb-1">${zakatDue}</p>
-          </div>
-        </div>
-
-        <div className="text-left mb-6 relative z-30">
-          <label className="block text-sm font-bold text-slate-700 mb-2">Send Zakat to</label>
-          <div className="flex gap-2 mb-2">
-            <div className="relative flex-1">
-              <input 
-                type="text" 
-                value={recipient}
-                onChange={(e) => setRecipient(e.target.value)}
-                placeholder="0x..." 
-                className={`w-full bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-transparent'} rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:ring-2 focus:ring-primary outline-none`}
-              />
-            </div>
-            <button className="bg-slate-100 p-4 rounded-2xl text-slate-600 hover:bg-slate-200 transition-colors shrink-0 flex items-center justify-center">
-              <QrCode size={20} />
-            </button>
-          </div>
-          {error && <p className="text-rose-500 text-xs font-bold mt-1">{error}</p>}
-          
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-2 max-h-48 overflow-y-auto mt-2">
-            <p className="text-xs font-bold text-slate-400 px-3 py-1 uppercase">Saved</p>
-            {savedAddresses.map((item, i) => (
-              <button key={`saved-${i}`} onClick={() => { setRecipient(item.address); setError(""); }} className="w-full text-left px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                <p className="text-xs font-mono text-slate-500 truncate">{item.address}</p>
-              </button>
-            ))}
-            <div className="h-px w-full bg-slate-200 my-2"></div>
-            <p className="text-xs font-bold text-slate-400 px-3 py-1 uppercase">Verified Charities</p>
-            {verifiedCharities.map((item, i) => (
-              <button key={`charity-${i}`} onClick={() => { setRecipient(item.address); setError(""); }} className="w-full text-left px-3 py-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <p className="text-sm font-bold text-slate-800">{item.name}</p>
-                <p className="text-xs font-mono text-slate-500 truncate">{item.address}</p>
-              </button>
-            ))}
-          </div>
-
-          <label className="flex items-center gap-2 cursor-pointer mt-3">
-            <input 
-              type="checkbox" 
-              checked={saveAsDefault}
-              onChange={(e) => setSaveAsDefault(e.target.checked)}
-              className="w-4 h-4 rounded text-primary focus:ring-primary accent-primary" 
-            />
-            <span className="text-sm font-medium text-slate-600">Save as my default Zakat recipient</span>
-          </label>
-        </div>
-
-        {!approved ? (
-          <button 
-            onClick={handleApprove}
-            className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-4 font-bold text-lg"
-          >
-            Review Payment
-          </button>
-        ) : (
-          <button 
-            disabled
-            className="w-full bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full py-4 font-bold text-lg flex justify-center items-center gap-2 cursor-default"
-          >
-            <CheckCircle2 size={20} /> Settled via x402
-          </button>
-        )}
+          Zakat Calc
+        </h2>
       </div>
+
+      {/* Balances Card */}
+      <div className="bg-[#ffa3c1] rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <div className="grid grid-cols-2 gap-3 mb-4 text-left">
+          <div className="bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Eligible Balance</p>
+            <p className="font-bold text-slate-800">${formattedBalance}</p>
+          </div>
+          <div className="bg-[#ffeb85] border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
+            <p className="text-[10px] font-black text-slate-600 uppercase tracking-wider mb-1">Nisab Threshold</p>
+            <p className="font-bold text-slate-900">$980.00</p>
+          </div>
+        </div>
+        
+        <div className="bg-white border-2 border-slate-900 p-5 rounded-2xl flex flex-col items-center">
+          <span className="bg-[#d0a6ff] text-slate-900 border border-slate-900 text-[10px] font-black px-3 py-1 rounded-full mb-2 uppercase tracking-wide">2.5% Due</span>
+          <p className="text-4xl font-black text-rose-600 mb-1">${zakatDue}</p>
+        </div>
+      </div>
+
+      {/* Recipient Card */}
+      <div className="bg-white rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Send Zakat to</label>
+        <div className="flex gap-2 mb-3">
+          <input 
+            type="text" 
+            value={recipient}
+            onChange={(e) => { setRecipient(e.target.value); setError(""); }}
+            placeholder="0x..." 
+            className={`w-full bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-slate-900'} rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:bg-white focus:outline-none transition-colors`}
+          />
+          <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
+            <QrCode size={20} />
+          </button>
+        </div>
+        {error && <p className="text-rose-500 text-xs font-bold mt-1 mb-2">{error}</p>}
+        
+        <div className="bg-white border-2 border-slate-900 rounded-2xl p-2 max-h-40 overflow-y-auto custom-scrollbar">
+          <p className="text-[10px] font-black text-slate-400 px-3 py-1 uppercase tracking-wider">Verified Charities & Saved</p>
+          {[...verifiedCharities, ...savedAddresses].map((item, i) => (
+            <button key={`charity-${i}`} onClick={() => { setRecipient(item.address); setError(""); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors">
+              <p className="text-sm font-bold text-slate-800">{item.name}</p>
+              <p className="text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
+            </button>
+          ))}
+        </div>
+
+        <label className="flex items-center gap-2 cursor-pointer mt-4 mb-2">
+          <input 
+            type="checkbox" 
+            checked={saveAsDefault}
+            onChange={(e) => setSaveAsDefault(e.target.checked)}
+            className="w-4 h-4 rounded text-primary focus:ring-primary accent-slate-900" 
+          />
+          <span className="text-xs font-bold text-slate-600">Save as my default Zakat recipient</span>
+        </label>
+      </div>
+
+      {/* Action Button */}
+      {!approved ? (
+        <button 
+          onClick={handleApprove}
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl"
+        >
+          Review Payment
+        </button>
+      ) : (
+        <button 
+          disabled
+          className="w-full bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 cursor-default"
+        >
+          <CheckCircle2 size={24} /> Settled via x402
+        </button>
+      )}
 
       <div className="bg-[#87dbfb] rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] z-10 relative mt-4">
         <h3 className="font-bold text-slate-900 mb-2">Sadaqah (Round-ups)</h3>
@@ -612,13 +603,13 @@ function ZakatTab() {
           <div className="font-bold text-slate-800">Enable Round-ups</div>
           <div 
             onClick={() => setSadaqahEnabled(!sadaqahEnabled)}
-            className={`w-14 h-7 rounded-full border-2 border-slate-900 relative cursor-pointer transition-colors duration-300 ease-in-out ${
-              sadaqahEnabled ? 'bg-[#ffeb85]' : 'bg-slate-300'
+            className={`w-16 h-8 rounded-full border-2 border-slate-900 flex items-center p-0.5 cursor-pointer transition-colors duration-300 ease-in-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] ${
+              sadaqahEnabled ? 'bg-[#34d399]' : 'bg-slate-200'
             }`}
           >
             <div 
-              className={`w-6 h-6 bg-white border-2 border-slate-900 rounded-full absolute -top-0.5 -left-0.5 transition-transform duration-300 ease-in-out shadow-sm ${
-                sadaqahEnabled ? 'translate-x-7' : 'translate-x-0'
+              className={`w-6 h-6 bg-white border-2 border-slate-900 rounded-full shadow-[1px_1px_0_0_#1a1a1a] transition-transform duration-300 ease-in-out ${
+                sadaqahEnabled ? 'translate-x-8' : 'translate-x-0'
               }`}
             ></div>
           </div>
