@@ -146,37 +146,17 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
       setIsLoadingTxs(true);
       try {
         const timestamp = new Date().getTime(); // cache buster
-        const res = await fetch(`https://explorer.celo.org/mainnet/api?module=account&action=tokentx&contractaddress=${USDM_ADDRESS}&address=${address}&page=1&offset=5&sort=desc&t=${timestamp}`, {
-          cache: 'no-store'
-        });
+        const res = await fetch(`/api/history?address=${address}&t=${timestamp}`);
         const data = await res.json();
-        if (data.status === "1" && data.result && data.result.length > 0) {
-          setRecentTxs(data.result);
+        
+        if (data.success && data.txs) {
+          setRecentTxs(data.txs);
         } else {
-          // Fallback mock data for hackathon demo if no real txs exist
-          setRecentTxs([
-            {
-              from: address || "0x0",
-              to: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // Global Relief
-              value: "25000000000000000000", // 25 USDm
-              timeStamp: (Math.floor(new Date().getTime() / 1000) - 86400).toString()
-            },
-            {
-              from: "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf", // External wallet
-              to: address || "0x0",
-              value: "100000000000000000000", // 100 USDm
-              timeStamp: (Math.floor(new Date().getTime() / 1000) - (86400 * 3)).toString()
-            },
-            {
-              from: address || "0x0",
-              to: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", // Water Project
-              value: "15000000000000000000", // 15 USDm
-              timeStamp: (Math.floor(new Date().getTime() / 1000) - (86400 * 7)).toString()
-            }
-          ]);
+          setRecentTxs([]);
         }
       } catch (e) {
         console.error("Failed to fetch txs", e);
+        setRecentTxs([]);
       } finally {
         setIsLoadingTxs(false);
       }
@@ -440,24 +420,21 @@ function RemitTab() {
           {isApprovePending ? "Approving..." : "Step 1: Approve USDm"}
         </button>
       ) : (
-        <div className="relative w-2/3 mx-auto h-12 bg-white rounded-full border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] overflow-hidden group">
-          
-          {/* Background Fill */}
-          <div className="absolute top-0 left-0 h-full bg-[#34d399] transition-none" style={{ width: `${sliderVal}%` }}></div>
+        <div className="relative w-2/3 mx-auto h-12 bg-[#34d399] rounded-full border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] overflow-hidden group">
           
           {/* Text */}
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none font-black text-slate-900 text-xs sm:text-sm z-10 opacity-60">
-            Slide to Send
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none font-black text-slate-900 text-xs sm:text-sm z-10">
+            Swipe to Send
           </div>
 
           {/* Swipe Thumb */}
           <div 
-            className="absolute top-0 flex items-center justify-center h-full aspect-square bg-slate-900 text-white rounded-full z-10 pointer-events-none transition-none shadow-sm"
+            className="absolute top-1 flex items-center justify-center w-[32px] h-[32px] bg-white text-slate-900 rounded-xl z-10 pointer-events-none transition-none shadow-sm"
             style={{ 
-              left: `calc(${sliderVal}% - ${sliderVal * 40 / 100}px)`
+              left: `calc(4px + ${sliderVal}% - ${sliderVal * 40 / 100}px)`
             }}
           >
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight size={18} className="text-slate-900" />
           </div>
 
           {/* Invisible Range Input */}
