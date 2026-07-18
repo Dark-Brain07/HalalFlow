@@ -290,7 +290,7 @@ function RemitTab() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [needsApproval, setNeedsApproval] = useState(true); // Simplified for MVP demo
-  const [txState, setTxState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [txState, setTxState] = useState<'idle' | 'loading' | 'success' | 'error' | 'approveSuccess'>('idle');
   const [sliderVal, setSliderVal] = useState(0);
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
   
@@ -334,6 +334,26 @@ function RemitTab() {
           className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black"
         >
           Send Another
+        </button>
+      </div>
+    );
+  }
+
+  if (txState === 'approveSuccess') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-6 py-12 animate-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-green-400 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full flex items-center justify-center text-white">
+          <CheckCircle2 size={48} className="text-slate-900" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-3xl font-black text-slate-800 mb-2">Approved!</h3>
+          <p className="text-slate-500 font-bold">You can now proceed to send your funds.</p>
+        </div>
+        <button 
+          onClick={() => { setTxState('idle'); setNeedsApproval(false); }}
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black flex items-center gap-2"
+        >
+          Continue <ArrowRight size={18} />
         </button>
       </div>
     );
@@ -444,8 +464,7 @@ function RemitTab() {
               ]
             }, {
               onSuccess: () => {
-                alert("Approval successful! You can now send funds.");
-                setNeedsApproval(false);
+                setTxState('approveSuccess');
               },
               onError: (err) => console.error("Approval Failed:", err)
             });
