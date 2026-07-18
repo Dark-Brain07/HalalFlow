@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnect, useAccount, useWriteContract, useReadContract } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -132,6 +132,7 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const [recentTxs, setRecentTxs] = useState<any[]>([]);
   const [isLoadingTxs, setIsLoadingTxs] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const ITEMS_PER_PAGE = 3;
   const totalPages = Math.ceil(recentTxs.length / ITEMS_PER_PAGE);
@@ -167,7 +168,7 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
       }
     };
     fetchTxs();
-  }, [address]);
+  }, [address, refreshKey]);
 
   const formattedBalance = balanceData !== undefined 
     ? parseFloat(formatUnits(balanceData, 18)).toFixed(2)
@@ -215,6 +216,13 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
         <div className="flex justify-between items-center mb-4 shrink-0">
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
             <History size={18} className="text-slate-400" /> Recent Activity
+            <button 
+              onClick={() => setRefreshKey(prev => prev + 1)}
+              disabled={isLoadingTxs}
+              className={`w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all ${isLoadingTxs ? 'animate-spin opacity-50 cursor-not-allowed' : ''}`}
+            >
+              <RefreshCw size={12} />
+            </button>
           </h3>
           {recentTxs.length > ITEMS_PER_PAGE && (
             <div className="flex items-center gap-1.5">
