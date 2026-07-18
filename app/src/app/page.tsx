@@ -51,14 +51,14 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
 
   return (
-    <div className="flex flex-col h-full w-full bg-background relative pb-24">
+    <div className="flex flex-col min-h-[100dvh] w-full bg-transparent relative pb-24">
       {/* Top Header */}
       <div className="flex items-center justify-end px-6 pt-12 pb-4">
         <WalletHeader />
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 pb-8 space-y-6">
+      <div className="flex-1 flex flex-col overflow-y-auto px-4 pb-8 space-y-6">
         {activeTab === "home" && <DashboardTab onNavigate={setActiveTab} />}
         {activeTab === "remit" && <RemitTab />}
         {activeTab === "zakat" && <ZakatTab />}
@@ -66,7 +66,7 @@ export default function App() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white rounded-full shadow-lg p-2 flex justify-between items-center z-50 border border-slate-100">
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-white rounded-full border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] p-2 flex justify-between items-center z-50">
         <NavButton icon={<Home size={22} />} active={activeTab === "home"} onClick={() => setActiveTab("home")} />
         <NavButton icon={<Send size={22} />} active={activeTab === "remit"} onClick={() => setActiveTab("remit")} />
         <NavButton icon={<Heart size={22} />} active={activeTab === "zakat"} onClick={() => setActiveTab("zakat")} />
@@ -167,8 +167,8 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
     : "0.00";
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-500 pb-8">
-      <div className="bg-[#ffeb85] rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] text-center relative overflow-hidden">
+    <div className="flex flex-col flex-1 space-y-4 animate-in fade-in duration-500 pb-8">
+      <div className="bg-[#ffeb85] rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] text-center relative overflow-hidden shrink-0">
         <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
           <ShieldCheck size={80} />
         </div>
@@ -204,14 +204,14 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
         </button>
       </div>
 
-      <div className="bg-white rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
-        <div className="flex justify-between items-center mb-4">
+      <div className="flex-1 bg-white rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] flex flex-col">
+        <div className="flex justify-between items-center mb-4 shrink-0">
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
             <History size={18} className="text-slate-400" /> Recent Activity
           </h3>
           <button className="text-sm font-semibold text-secondary">See all</button>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1 flex flex-col justify-center">
           {isLoadingTxs ? (
             <p className="text-sm text-slate-400 font-medium text-center py-4">Loading activity...</p>
           ) : recentTxs.length > 0 ? (
