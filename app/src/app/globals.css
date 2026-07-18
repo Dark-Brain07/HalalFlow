@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --background: #d0a6ff; /* Doodles Pastel Purple */
+  --foreground: #1a1a1a; /* Dark text */
+  --card: #ffffff;
+  --primary: #87dbfb; /* Doodles Pastel Blue */
+  --primary-foreground: #1a1a1a;
+  --secondary: #ffa3c1; /* Doodles Pastel Pink */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --font-sans: var(--font-outfit), sans-serif;
+}
+
+body {
+  background: #333333; /* Dark outer background to make the mobile frame pop */
+  color: var(--foreground);
+}
+
+.mobile-container {
+  background: linear-gradient(135deg, #ffeb85 0%, #ffa3c1 50%, #d0a6ff 100%);
+  box-shadow: 0 0 40px rgba(208, 166, 255, 0.4); /* Pastel purple glow */
+}
+
+/* Hide scrollbar for a clean mobile look */
+::-webkit-scrollbar {
+  display: none;
+}
