@@ -292,58 +292,58 @@ function RemitTab() {
   ];
 
   return (
-    <div className="space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
+    <div className="space-y-4 sm:space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
       <div className="px-2 mb-2">
-        <h2 className="text-3xl font-black text-slate-800 flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#ffeb85] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
-            <Send size={24} className="text-slate-900" />
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#ffeb85] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
+            <Send className="text-slate-900 w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           Send Remittance
         </h2>
       </div>
 
       {/* Recipient Box */}
-      <div className="bg-[#ffeb85] rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
-        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Recipient Address</label>
-        <div className="flex gap-2 mb-3">
+      <div className="bg-[#ffeb85] rounded-3xl sm:rounded-[2rem] p-4 sm:p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-1.5 sm:mb-2 uppercase tracking-wide">Recipient Address</label>
+        <div className="flex gap-2 mb-2 sm:mb-3">
           <input 
             type="text" 
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
             placeholder="0x..." 
-            className="w-full min-w-0 bg-white border-2 border-slate-900 rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
+            className="w-full min-w-0 bg-white border-2 border-slate-900 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
           />
-          <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
-            <QrCode size={20} />
+          <button className="bg-white border-2 border-slate-900 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
+            <QrCode className="w-5 h-5" />
           </button>
         </div>
         
-        <div className="bg-white border-2 border-slate-900 rounded-2xl p-2 max-h-40 overflow-y-auto custom-scrollbar">
+        <div className="bg-white border-2 border-slate-900 rounded-xl sm:rounded-2xl p-2 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar">
           <p className="text-[10px] font-black text-slate-400 px-3 py-1 uppercase tracking-wider">Saved & Verified</p>
           {[...savedAddresses, ...verifiedCharities].map((item, i) => (
-            <button key={`saved-${i}`} onClick={() => setRecipient(item.address)} className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors">
-              <p className="text-sm font-bold text-slate-800">{item.name}</p>
-              <p className="text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
+            <button key={`saved-${i}`} onClick={() => setRecipient(item.address)} className="w-full text-left px-3 py-1.5 sm:py-2 hover:bg-slate-50 rounded-lg sm:rounded-xl transition-colors">
+              <p className="text-xs sm:text-sm font-bold text-slate-800">{item.name}</p>
+              <p className="text-[10px] sm:text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Amount Box */}
-      <div className="bg-white rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
-        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Amount (USDm)</label>
-        <div className="relative mb-4">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-2xl">$</span>
+      <div className="bg-white rounded-3xl sm:rounded-[2rem] p-4 sm:p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-1.5 sm:mb-2 uppercase tracking-wide">Amount (USDm)</label>
+        <div className="relative mb-3 sm:mb-4">
+          <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xl sm:text-2xl">$</span>
           <input 
             type="number" 
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00" 
-            className="w-full min-w-0 bg-slate-50 border-2 border-slate-900 rounded-2xl p-4 pl-9 text-2xl font-black text-slate-800 focus:outline-none focus:bg-white transition-colors"
+            className="w-full min-w-0 bg-slate-50 border-2 border-slate-900 rounded-xl sm:rounded-2xl p-3 sm:p-4 pl-8 sm:pl-9 text-xl sm:text-2xl font-black text-slate-800 focus:outline-none focus:bg-white transition-colors"
           />
         </div>
 
-        <div className="bg-[#a5ebd3] p-4 rounded-2xl space-y-2 text-sm border-2 border-slate-900">
+        <div className="bg-[#a5ebd3] p-3 sm:p-4 rounded-xl sm:rounded-2xl space-y-1.5 sm:space-y-2 text-xs sm:text-sm border-2 border-slate-900">
           <div className="flex justify-between font-bold text-slate-700">
             <span>Send Amount</span>
             <span>${amount || "0.00"}</span>
@@ -352,8 +352,8 @@ function RemitTab() {
             <span>Flat Network Fee</span>
             <span>$0.50</span>
           </div>
-          <div className="h-px w-full bg-slate-900/10 my-2"></div>
-          <div className="flex justify-between font-black text-slate-900 text-lg">
+          <div className="h-px w-full bg-slate-900/10 my-1.5 sm:my-2"></div>
+          <div className="flex justify-between font-black text-slate-900 text-base sm:text-lg">
             <span>Total to deduct</span>
             <span>${amount ? (parseFloat(amount) + 0.50).toFixed(2) : "0.50"}</span>
           </div>
@@ -383,7 +383,7 @@ function RemitTab() {
             });
           }}
           disabled={isApprovePending}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
         >
           {isApprovePending ? "Approving..." : "Step 1: Approve USDm"}
         </button>
@@ -410,9 +410,9 @@ function RemitTab() {
             });
           }}
           disabled={isPending}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
         >
-          {isPending ? "Sending..." : <>Step 2: Send <ArrowRight size={24} /></>}
+          {isPending ? "Sending..." : <>Step 2: Send <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" /></>}
         </button>
       )}
     </div>
@@ -533,70 +533,70 @@ function ZakatTab() {
   }
 
   return (
-    <div className="space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
+    <div className="space-y-4 sm:space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
       <div className="px-2 mb-2">
-        <h2 className="text-3xl font-black text-slate-800 flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#ffa3c1] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
-            <Heart size={24} className="text-slate-900" />
+        <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#ffa3c1] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
+            <Heart className="text-slate-900 w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           Zakat Calc
         </h2>
       </div>
 
       {/* Balances Card */}
-      <div className="bg-[#ffa3c1] rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
-        <div className="grid grid-cols-2 gap-3 mb-4 text-left">
-          <div className="bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
-            <p className="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Eligible Balance</p>
-            <p className="font-bold text-slate-800">${formattedBalance}</p>
+      <div className="bg-[#ffa3c1] rounded-3xl sm:rounded-[2rem] p-4 sm:p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4 text-left">
+          <div className="bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-3 sm:p-4 rounded-xl sm:rounded-2xl">
+            <p className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase tracking-wider mb-1">Eligible Balance</p>
+            <p className="text-sm sm:text-base font-bold text-slate-800">${formattedBalance}</p>
           </div>
-          <div className="bg-[#ffeb85] border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
-            <p className="text-[10px] font-black text-slate-600 uppercase tracking-wider mb-1">Nisab Threshold</p>
-            <p className="font-bold text-slate-900">$980.00</p>
+          <div className="bg-[#ffeb85] border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-3 sm:p-4 rounded-xl sm:rounded-2xl">
+            <p className="text-[9px] sm:text-[10px] font-black text-slate-600 uppercase tracking-wider mb-1">Nisab Threshold</p>
+            <p className="text-sm sm:text-base font-bold text-slate-900">$980.00</p>
           </div>
         </div>
         
-        <div className="bg-white border-2 border-slate-900 p-5 rounded-2xl flex flex-col items-center">
-          <span className="bg-[#d0a6ff] text-slate-900 border border-slate-900 text-[10px] font-black px-3 py-1 rounded-full mb-2 uppercase tracking-wide">2.5% Due</span>
-          <p className="text-4xl font-black text-rose-600 mb-1">${zakatDue}</p>
+        <div className="bg-white border-2 border-slate-900 p-4 sm:p-5 rounded-xl sm:rounded-2xl flex flex-col items-center">
+          <span className="bg-[#d0a6ff] text-slate-900 border border-slate-900 text-[9px] sm:text-[10px] font-black px-3 py-1 rounded-full mb-1 sm:mb-2 uppercase tracking-wide">2.5% Due</span>
+          <p className="text-3xl sm:text-4xl font-black text-rose-600 mb-1">${zakatDue}</p>
         </div>
       </div>
 
       {/* Recipient Card */}
-      <div className="bg-white rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
-        <label className="block text-xs font-black text-slate-800 mb-2 uppercase tracking-wide">Send Zakat to</label>
-        <div className="flex gap-2 mb-3">
+      <div className="bg-white rounded-3xl sm:rounded-[2rem] p-4 sm:p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <label className="block text-xs font-black text-slate-800 mb-1.5 sm:mb-2 uppercase tracking-wide">Send Zakat to</label>
+        <div className="flex gap-2 mb-2 sm:mb-3">
           <input 
             type="text" 
             value={recipient}
             onChange={(e) => { setRecipient(e.target.value); setError(""); }}
             placeholder="0x..." 
-            className={`w-full min-w-0 bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-slate-900'} rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:bg-white focus:outline-none transition-colors`}
+            className={`w-full min-w-0 bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-slate-900'} rounded-xl sm:rounded-2xl p-3 sm:p-4 text-slate-800 placeholder-slate-400 font-mono text-xs sm:text-sm focus:bg-white focus:outline-none transition-colors`}
           />
-          <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
-            <QrCode size={20} />
+          <button className="bg-white border-2 border-slate-900 p-3 sm:p-4 rounded-xl sm:rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
+            <QrCode className="w-5 h-5" />
           </button>
         </div>
-        {error && <p className="text-rose-500 text-xs font-bold mt-1 mb-2">{error}</p>}
+        {error && <p className="text-rose-500 text-[10px] sm:text-xs font-bold mt-1 mb-2">{error}</p>}
         
-        <div className="bg-white border-2 border-slate-900 rounded-2xl p-2 max-h-40 overflow-y-auto custom-scrollbar">
+        <div className="bg-white border-2 border-slate-900 rounded-xl sm:rounded-2xl p-2 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar">
           <p className="text-[10px] font-black text-slate-400 px-3 py-1 uppercase tracking-wider">Verified Charities & Saved</p>
           {[...verifiedCharities, ...savedAddresses].map((item, i) => (
-            <button key={`charity-${i}`} onClick={() => { setRecipient(item.address); setError(""); }} className="w-full text-left px-3 py-2 hover:bg-slate-50 rounded-xl transition-colors">
-              <p className="text-sm font-bold text-slate-800">{item.name}</p>
-              <p className="text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
+            <button key={`charity-${i}`} onClick={() => { setRecipient(item.address); setError(""); }} className="w-full text-left px-3 py-1.5 sm:py-2 hover:bg-slate-50 rounded-lg sm:rounded-xl transition-colors">
+              <p className="text-xs sm:text-sm font-bold text-slate-800">{item.name}</p>
+              <p className="text-[10px] sm:text-[11px] font-mono text-slate-500 truncate">{item.address}</p>
             </button>
           ))}
         </div>
 
-        <label className="flex items-center gap-2 cursor-pointer mt-4 mb-2">
+        <label className="flex items-center gap-2 cursor-pointer mt-3 sm:mt-4 mb-1 sm:mb-2">
           <input 
             type="checkbox" 
             checked={saveAsDefault}
             onChange={(e) => setSaveAsDefault(e.target.checked)}
             className="w-4 h-4 rounded text-primary focus:ring-primary accent-slate-900" 
           />
-          <span className="text-xs font-bold text-slate-600">Save as my default Zakat recipient</span>
+          <span className="text-[10px] sm:text-xs font-bold text-slate-600">Save as my default Zakat recipient</span>
         </label>
       </div>
 
@@ -604,34 +604,34 @@ function ZakatTab() {
       {!approved ? (
         <button 
           onClick={handleApprove}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-[2rem] py-5 font-black text-xl"
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl"
         >
           Review Payment
         </button>
       ) : (
         <button 
           disabled
-          className="w-full bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-[2rem] py-5 font-black text-xl flex justify-center items-center gap-2 cursor-default"
+          className="w-full bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 cursor-default"
         >
-          <CheckCircle2 size={24} /> Settled via x402
+          <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> Settled via x402
         </button>
       )}
 
-      <div className="bg-[#87dbfb] rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] z-10 relative mt-4">
-        <h3 className="font-bold text-slate-900 mb-2">Sadaqah (Round-ups)</h3>
-        <p className="text-slate-700 text-sm font-medium mb-4">Automatically round up remittances to the nearest dollar to donate.</p>
+      <div className="bg-[#87dbfb] rounded-3xl sm:rounded-[2rem] p-4 sm:p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] z-10 relative mt-3 sm:mt-4">
+        <h3 className="font-bold text-slate-900 mb-1 sm:mb-2 text-sm sm:text-base">Sadaqah (Round-ups)</h3>
+        <p className="text-slate-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">Automatically round up remittances to the nearest dollar to donate.</p>
         
-        <div className="flex items-center justify-between bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
-          <div className="font-bold text-slate-800">Enable Round-ups</div>
+        <div className="flex items-center justify-between bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-3 sm:p-4 rounded-xl sm:rounded-2xl">
+          <div className="font-bold text-slate-800 text-xs sm:text-sm">Enable Round-ups</div>
           <div 
             onClick={() => setSadaqahEnabled(!sadaqahEnabled)}
-            className={`w-16 h-8 rounded-full border-2 border-slate-900 flex items-center p-0.5 cursor-pointer transition-colors duration-300 ease-in-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] ${
+            className={`w-14 sm:w-16 h-7 sm:h-8 rounded-full border-2 border-slate-900 flex items-center p-0.5 cursor-pointer transition-colors duration-300 ease-in-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] ${
               sadaqahEnabled ? 'bg-[#34d399]' : 'bg-slate-200'
             }`}
           >
             <div 
-              className={`w-6 h-6 bg-white border-2 border-slate-900 rounded-full shadow-[1px_1px_0_0_#1a1a1a] transition-transform duration-300 ease-in-out ${
-                sadaqahEnabled ? 'translate-x-8' : 'translate-x-0'
+              className={`w-5 h-5 sm:w-6 sm:h-6 bg-white border-2 border-slate-900 rounded-full shadow-[1px_1px_0_0_#1a1a1a] transition-transform duration-300 ease-in-out ${
+                sadaqahEnabled ? 'translate-x-[26px] sm:translate-x-8' : 'translate-x-0'
               }`}
             ></div>
           </div>
