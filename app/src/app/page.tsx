@@ -581,6 +581,12 @@ function ZakatTab() {
   };
 
   const handleFinalConfirm = () => {
+    if (parseFloat(zakatDue) <= 0) {
+      setError("Your Zakat due is zero. No payment needed.");
+      return;
+    }
+    setError("");
+    
     if (saveAsDefault) {
       localStorage.setItem("defaultZakatRecipient", recipient);
       setDefaultZakatAddress(recipient);
@@ -599,9 +605,9 @@ function ZakatTab() {
         setApproved(true);
         setIsConfirming(false);
       },
-      onError: (err) => {
+      onError: (err: any) => {
         console.error(err);
-        setError("Transaction failed.");
+        setError(err.shortMessage || err.message || "Transaction failed.");
       }
     });
   };
@@ -616,10 +622,12 @@ function ZakatTab() {
           <h2 className="text-2xl font-extrabold text-slate-800 mb-2">Confirm Payment</h2>
           <p className="text-rose-500 text-sm font-bold mb-6">Transactions can't be reversed — double-check this address.</p>
           
-          <div className="bg-slate-50 p-4 rounded-2xl mb-6 text-left break-all border border-slate-100">
+          <div className="bg-slate-50 p-4 rounded-2xl mb-4 text-left break-all border border-slate-100">
             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Recipient Address</p>
             <p className="font-mono text-sm font-bold text-slate-800">{recipient}</p>
           </div>
+          
+          {error && <p className="text-rose-500 text-sm font-bold mb-4">{error}</p>}
 
           <div className="flex gap-3">
             <button 
