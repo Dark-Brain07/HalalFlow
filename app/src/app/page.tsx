@@ -515,7 +515,6 @@ function ZakatTab() {
   const [isConfirming, setIsConfirming] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [saveAsDefault, setSaveAsDefault] = useState(false);
-  const [sadaqahEnabled, setSadaqahEnabled] = useState(true);
   const [error, setError] = useState("");
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
 
@@ -705,32 +704,13 @@ function ZakatTab() {
           <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> Settled via x402
         </button>
       )}
-
-      <div className="bg-[#87dbfb] rounded-3xl sm:rounded-[2rem] p-4 sm:p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] z-10 relative mt-3 sm:mt-4">
-        <h3 className="font-bold text-slate-900 mb-1 sm:mb-2 text-sm sm:text-base">Sadaqah (Round-ups)</h3>
-        <p className="text-slate-700 text-xs sm:text-sm font-medium mb-3 sm:mb-4">Automatically round up remittances to the nearest dollar to donate.</p>
-        
-        <div className="flex items-center justify-between bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-3 sm:p-4 rounded-xl sm:rounded-2xl">
-          <div className="font-bold text-slate-800 text-xs sm:text-sm">Enable Round-ups</div>
-          <div 
-            onClick={() => setSadaqahEnabled(!sadaqahEnabled)}
-            className={`w-14 sm:w-16 h-7 sm:h-8 rounded-full border-2 border-slate-900 flex items-center p-0.5 cursor-pointer transition-colors duration-300 ease-in-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] ${
-              sadaqahEnabled ? 'bg-[#34d399]' : 'bg-slate-200'
-            }`}
-          >
-            <div 
-              className={`w-5 h-5 sm:w-6 sm:h-6 bg-white border-2 border-slate-900 rounded-full shadow-[1px_1px_0_0_#1a1a1a] transition-transform duration-300 ease-in-out ${
-                sadaqahEnabled ? 'translate-x-[26px] sm:translate-x-8' : 'translate-x-0'
-              }`}
-            ></div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
 
 function RegistryTab() {
+  const [sadaqahEnabled, setSadaqahEnabled] = useState(true);
+
   const assets = [
     { name: "USDm", status: "Halal", desc: "Fiat-backed stablecoin, no interest yields." },
     { name: "USDC", status: "Halal", desc: "Transparent reserves." },
@@ -739,7 +719,28 @@ function RegistryTab() {
   ];
 
   return (
-    <div className="space-y-4 animate-in slide-in-from-right-4 duration-500">
+    <div className="space-y-4 animate-in slide-in-from-right-4 duration-500 pb-8">
+      <div className="bg-[#87dbfb] rounded-[2rem] p-6 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+        <h3 className="font-bold text-slate-900 mb-2 text-lg">Sadaqah (Round-ups)</h3>
+        <p className="text-slate-700 text-sm font-medium mb-4">Automatically round up remittances to the nearest dollar to donate.</p>
+        
+        <div className="flex items-center justify-between bg-white border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] p-4 rounded-2xl">
+          <div className="font-bold text-slate-800 text-sm">Enable Round-ups</div>
+          <div 
+            onClick={() => setSadaqahEnabled(!sadaqahEnabled)}
+            className={`w-16 h-8 rounded-full border-2 border-slate-900 flex items-center p-0.5 cursor-pointer transition-colors duration-300 ease-in-out shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] ${
+              sadaqahEnabled ? 'bg-[#34d399]' : 'bg-slate-200'
+            }`}
+          >
+            <div 
+              className={`w-6 h-6 bg-white border-2 border-slate-900 rounded-full shadow-[1px_1px_0_0_#1a1a1a] transition-transform duration-300 ease-in-out ${
+                sadaqahEnabled ? 'translate-x-8' : 'translate-x-0'
+              }`}
+            ></div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-secondary text-white rounded-[2rem] p-6 shadow-sm">
         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-3 backdrop-blur-md">
           <ShieldCheck size={24} className="text-white" />
