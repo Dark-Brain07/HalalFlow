@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle, ChevronLeft, ChevronRight, RefreshCw, Info, X } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnect, useAccount, useWriteContract, useReadContract } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -59,11 +59,18 @@ type Tab = "home" | "remit" | "zakat" | "registry";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
+  const [showAbout, setShowAbout] = useState(false);
 
   return (
     <div className="flex flex-col min-h-[100dvh] w-full bg-transparent relative pb-24">
       {/* Top Header */}
-      <div className="flex items-center justify-end px-6 pt-12 pb-4">
+      <div className="flex items-center justify-between px-6 pt-12 pb-4">
+        <button 
+          onClick={() => setShowAbout(true)}
+          className="w-12 h-12 bg-[#34d399] border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a,0_0_20px_rgba(52,211,153,0.6)] rounded-full flex items-center justify-center active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a,0_0_25px_rgba(52,211,153,0.8)] transition-all"
+        >
+          <Info className="w-6 h-6 text-slate-900" />
+        </button>
         <WalletHeader />
       </div>
 
@@ -82,6 +89,51 @@ export default function App() {
         <NavButton icon={<HandCoins size={22} />} active={activeTab === "zakat"} onClick={() => setActiveTab("zakat")} />
         <NavButton icon={<ShieldCheck size={22} />} active={activeTab === "registry"} onClick={() => setActiveTab("registry")} />
       </div>
+
+      {showAbout && (
+        <div className="fixed inset-0 z-[100] flex flex-col bg-slate-900/40 backdrop-blur-sm p-4 pt-16 pb-24 overflow-hidden animate-in fade-in">
+          <div className="bg-white w-full h-full max-w-md mx-auto rounded-[2.5rem] border-4 border-slate-900 shadow-[8px_8px_0_0_#1a1a1a] flex flex-col relative overflow-hidden">
+            {/* Header */}
+            <div className="bg-[#87dbfb] p-6 border-b-4 border-slate-900 flex justify-between items-center shrink-0">
+              <h2 className="text-3xl font-black text-slate-900">About App</h2>
+              <button onClick={() => setShowAbout(false)} className="w-10 h-10 bg-white border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a] active:translate-y-1 active:shadow-none transition-all">
+                <X className="w-5 h-5 text-slate-900" />
+              </button>
+            </div>
+            
+            {/* Content Body */}
+            <div className="p-6 overflow-y-auto space-y-6 custom-scrollbar flex-1 pb-12 bg-slate-50">
+              
+              <section className="bg-[#ffa3c1] p-5 rounded-3xl border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+                <h3 className="text-xl font-black text-slate-900 mb-2">What is HalalFlow?</h3>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed">HalalFlow is a decentralized remittance and wealth management platform built on Celo. It ensures that your crypto interactions are 100% compliant with Islamic finance principles.</p>
+              </section>
+
+              <section className="bg-[#a5ebd3] p-5 rounded-3xl border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+                <h3 className="text-xl font-black text-slate-900 mb-2">Architecture</h3>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed mb-2">Built with Next.js, Wagmi, and Celo Mainnet. We use the <strong>x402 Facilitator API</strong> for gasless, seamless cross-border remittances in under 5 seconds.</p>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed">Our <strong>Halal Registry</strong> smart contract on-chain verifies token compliance.</p>
+              </section>
+
+              <section className="bg-[#87dbfb] p-5 rounded-3xl border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+                <h3 className="text-xl font-black text-slate-900 mb-2">AI Agent</h3>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed">The <strong>HalalFlow Agent</strong> is an autonomous AI that monitors your stablecoin balance, calculates Zakat eligibility against the live Nisab value, and securely processes payments to verified charities via intent-based interactions.</p>
+              </section>
+
+              <section className="bg-[#ffeb85] p-5 rounded-3xl border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+                <h3 className="text-xl font-black text-slate-900 mb-2">What is Zakat?</h3>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed">Zakat is an Islamic obligation to donate 2.5% of one's accumulated wealth to charitable causes annually. HalalFlow automatically calculates this for your stablecoin balances.</p>
+              </section>
+
+              <section className="bg-[#d0a6ff] p-5 rounded-3xl border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a]">
+                <h3 className="text-xl font-black text-slate-900 mb-2">What is Nisab?</h3>
+                <p className="text-slate-900 font-bold text-sm leading-relaxed">Nisab is the minimum threshold of wealth a person must hold before they are eligible to pay Zakat. If your balance is below Nisab (approx $980), you don't owe Zakat.</p>
+              </section>
+              
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -838,7 +890,7 @@ function RegistryTab() {
         </div>
       </div>
 
-      <div className="bg-secondary text-white rounded-[2rem] p-6 shadow-sm">
+      <div className="bg-secondary text-white rounded-[2rem] p-6 shadow-sm relative">
         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-3 backdrop-blur-md">
           <ShieldCheck size={24} className="text-white" />
         </div>
@@ -865,6 +917,7 @@ function RegistryTab() {
           </div>
         ))}
       </div>
+
     </div>
   );
 }
