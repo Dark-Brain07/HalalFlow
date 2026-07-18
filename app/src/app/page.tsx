@@ -604,6 +604,7 @@ function ZakatTab() {
   const [isConfirming, setIsConfirming] = useState(false);
   const [saveAsDefault, setSaveAsDefault] = useState(false);
   const [error, setError] = useState("");
+  const [txState, setTxState] = useState<'idle' | 'success' | 'error'>('idle');
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
   const [countdown, setCountdown] = useState({ d: 354, h: 23, m: 59, s: 59 });
   
@@ -698,18 +699,63 @@ function ZakatTab() {
       ]
     }, {
       onSuccess: () => {
-        setApproved(true);
+        setTxState('success');
         setIsConfirming(false);
-        if (address) {
-          localStorage.setItem(`hasPaidZakat_${address}`, "true");
-        }
       },
       onError: (err: any) => {
         console.error(err);
         setError(err.shortMessage || err.message || "Transaction failed.");
+        setTxState('error');
+        setIsConfirming(false);
       }
     });
   };
+
+  if (txState === 'success') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-6 py-12 animate-in zoom-in duration-500 pb-20">
+        <div className="w-24 h-24 bg-green-400 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full flex items-center justify-center text-white">
+          <CheckCircle2 size={48} className="text-slate-900" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-3xl font-black text-slate-800 mb-2">Zakat Paid!</h3>
+          <p className="text-slate-500 font-bold">May it purify your wealth.</p>
+        </div>
+        <button 
+          onClick={() => { 
+            setTxState('idle'); 
+            setApproved(true); 
+            if (address) {
+              localStorage.setItem(`hasPaidZakat_${address}`, "true");
+            }
+          }}
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black flex items-center gap-2 mt-4"
+        >
+          View Status <ArrowRight size={18} />
+        </button>
+      </div>
+    );
+  }
+
+  if (txState === 'error') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-6 py-12 animate-in zoom-in duration-500 pb-20">
+        <div className="w-24 h-24 bg-rose-400 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full flex items-center justify-center text-white">
+          <XCircle size={48} className="text-slate-900" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-3xl font-black text-slate-800 mb-2">Failed</h3>
+          <p className="text-slate-500 font-bold px-4">{error || "Something went wrong."}</p>
+        </div>
+        <button 
+          onClick={() => { setTxState('idle'); }}
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black mt-4"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   if (isConfirming) {
     return (
