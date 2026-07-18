@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle } from "lucide-react";
+import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnect, useAccount, useWriteContract, useReadContract } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -131,6 +131,11 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
   const { address } = useAccount();
   const [recentTxs, setRecentTxs] = useState<any[]>([]);
   const [isLoadingTxs, setIsLoadingTxs] = useState(false);
+  const [pageIndex, setPageIndex] = useState(0);
+
+  const ITEMS_PER_PAGE = 3;
+  const totalPages = Math.ceil(recentTxs.length / ITEMS_PER_PAGE);
+  const displayTxs = recentTxs.slice(pageIndex * ITEMS_PER_PAGE, (pageIndex + 1) * ITEMS_PER_PAGE);
 
   const { data: balanceData } = useReadContract({
     address: USDM_ADDRESS as `0x${string}`,
@@ -211,13 +216,30 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
           <h3 className="font-bold text-slate-800 flex items-center gap-2">
             <History size={18} className="text-slate-400" /> Recent Activity
           </h3>
-          <button className="text-sm font-semibold text-secondary">See all</button>
+          {recentTxs.length > ITEMS_PER_PAGE && (
+            <div className="flex items-center gap-1.5">
+              <button 
+                onClick={() => setPageIndex(Math.max(0, pageIndex - 1))}
+                disabled={pageIndex === 0}
+                className="w-7 h-7 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-200 transition-colors"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button 
+                onClick={() => setPageIndex(Math.min(totalPages - 1, pageIndex + 1))}
+                disabled={pageIndex >= totalPages - 1}
+                className="w-7 h-7 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-200 transition-colors"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
         <div className="space-y-4 flex-1 flex flex-col justify-center">
           {isLoadingTxs ? (
             <p className="text-sm text-slate-400 font-medium text-center py-4">Loading activity...</p>
           ) : recentTxs.length > 0 ? (
-            recentTxs.map((tx, i) => {
+            displayTxs.map((tx, i) => {
               const isOut = tx.from.toLowerCase() === address?.toLowerCase();
               const amount = parseFloat(formatUnits(tx.value, 18)).toFixed(2);
               const date = new Date(parseInt(tx.timeStamp) * 1000).toLocaleDateString();
@@ -225,17 +247,17 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
               return (
                 <div key={i} className="flex justify-between items-center p-3 hover:bg-slate-50 rounded-2xl transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl">
+                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl shrink-0">
                       {isOut ? "💸" : "📥"}
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 text-sm truncate w-24">
+                      <p className="font-bold text-slate-800 text-sm w-24 truncate">
                         {isOut ? `To ${tx.to.slice(0,6)}...` : `From ${tx.from.slice(0,6)}...`}
                       </p>
                       <p className="text-xs text-slate-400 font-medium">{date}</p>
                     </div>
                   </div>
-                  <p className={`font-bold ${isOut ? 'text-slate-800' : 'text-green-600'}`}>
+                  <p className={`font-black ${isOut ? 'text-slate-800' : 'text-green-600'}`}>
                     {isOut ? "-" : "+"}${amount}
                   </p>
                 </div>
