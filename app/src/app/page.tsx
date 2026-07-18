@@ -79,7 +79,7 @@ export default function App() {
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md bg-white rounded-full border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] p-2 flex justify-between items-center z-50">
         <NavButton icon={<Home size={22} />} active={activeTab === "home"} onClick={() => setActiveTab("home")} />
         <NavButton icon={<Send size={22} />} active={activeTab === "remit"} onClick={() => setActiveTab("remit")} />
-        <NavButton icon={<Heart size={22} />} active={activeTab === "zakat"} onClick={() => setActiveTab("zakat")} />
+        <NavButton icon={<HandCoins size={22} />} active={activeTab === "zakat"} onClick={() => setActiveTab("zakat")} />
         <NavButton icon={<ShieldCheck size={22} />} active={activeTab === "registry"} onClick={() => setActiveTab("registry")} />
       </div>
     </div>
@@ -215,7 +215,7 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
           className="bg-[#ffa3c1] rounded-[2rem] p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] text-left active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all"
         >
           <div className="w-10 h-10 bg-rose-100 rounded-full flex items-center justify-center mb-3">
-            <Heart size={20} className="text-rose-500" />
+            <HandCoins size={20} className="text-rose-500" />
           </div>
           <h3 className="font-bold text-slate-800">Zakat</h3>
           <p className="text-sm text-slate-500 font-medium">Due in 4 days</p>
@@ -701,7 +701,7 @@ function ZakatTab() {
       <div className="px-2 mb-2">
         <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-3">
           <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#ffa3c1] border-4 border-slate-900 rounded-full flex items-center justify-center shadow-[2px_2px_0_0_#1a1a1a]">
-            <Heart className="text-slate-900 w-5 h-5 sm:w-6 sm:h-6" />
+            <HandCoins className="text-slate-900 w-5 h-5 sm:w-6 sm:h-6" />
           </div>
           Zakat Calc
         </h2>
