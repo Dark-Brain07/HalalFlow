@@ -540,10 +540,11 @@ function ZakatTab() {
   const [approved, setApproved] = useState(false);
   const [recipient, setRecipient] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [saveAsDefault, setSaveAsDefault] = useState(false);
   const [error, setError] = useState("");
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
+  
+  const { writeContract, isPending } = useWriteContract();
 
   useEffect(() => {
     const saved = localStorage.getItem("defaultZakatRecipient");
@@ -579,37 +580,30 @@ function ZakatTab() {
     setIsConfirming(true);
   };
 
-  const handleFinalConfirm = async () => {
+  const handleFinalConfirm = () => {
     if (saveAsDefault) {
       localStorage.setItem("defaultZakatRecipient", recipient);
       setDefaultZakatAddress(recipient);
     }
     
-    setIsProcessing(true);
-    try {
-      const res = await fetch('/api/zakat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userAddress: address || "0xAnonymous",
-          recipientAddress: recipient,
-          amount: zakatDue
-        })
-      });
-      
-      const data = await res.json();
-      if (data.success) {
+    writeContract({
+      address: USDM_ADDRESS as `0x${string}`,
+      abi: erc20Abi,
+      functionName: 'transfer',
+      args: [
+        recipient as `0x${string}`,
+        parseUnits(zakatDue, 18)
+      ]
+    }, {
+      onSuccess: () => {
         setApproved(true);
         setIsConfirming(false);
-      } else {
-        setError("Payment failed. Please try again.");
+      },
+      onError: (err) => {
+        console.error(err);
+        setError("Transaction failed.");
       }
-    } catch (err) {
-      console.error(err);
-      setError("Network error occurred.");
-    } finally {
-      setIsProcessing(false);
-    }
+    });
   };
 
   if (isConfirming) {
@@ -636,10 +630,10 @@ function ZakatTab() {
             </button>
             <button 
               onClick={handleFinalConfirm}
-              disabled={isProcessing}
+              disabled={isPending}
               className="flex-1 bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-4 font-bold text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
             >
-              {isProcessing ? "Processing..." : "Confirm"}
+              {isPending ? "Confirming..." : "Confirm"}
             </button>
           </div>
         </div>
