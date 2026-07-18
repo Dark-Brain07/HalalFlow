@@ -245,13 +245,19 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
               const date = new Date(parseInt(tx.timeStamp) * 1000).toLocaleDateString();
               
               return (
-                <div key={i} className="flex justify-between items-center p-3 hover:bg-slate-50 rounded-2xl transition-colors">
+                <a 
+                  key={i} 
+                  href={`https://explorer.celo.org/mainnet/tx/${tx.hash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex justify-between items-center p-3 hover:bg-slate-50 rounded-2xl transition-colors cursor-pointer group"
+                >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl shrink-0">
+                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
                       {isOut ? "💸" : "📥"}
                     </div>
                     <div>
-                      <p className="font-bold text-slate-800 text-sm w-24 truncate">
+                      <p className="font-bold text-slate-800 text-sm w-24 truncate group-hover:text-primary transition-colors">
                         {isOut ? `To ${tx.to.slice(0,6)}...` : `From ${tx.from.slice(0,6)}...`}
                       </p>
                       <p className="text-xs text-slate-400 font-medium">{date}</p>
@@ -260,7 +266,7 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
                   <p className={`font-black ${isOut ? 'text-slate-800' : 'text-green-600'}`}>
                     {isOut ? "-" : "+"}${amount}
                   </p>
-                </div>
+                </a>
               );
             })
           ) : (
