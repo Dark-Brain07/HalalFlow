@@ -150,8 +150,30 @@ function DashboardTab({ onNavigate }: { onNavigate: (tab: Tab) => void }) {
           cache: 'no-store'
         });
         const data = await res.json();
-        if (data.status === "1" && data.result) {
+        if (data.status === "1" && data.result && data.result.length > 0) {
           setRecentTxs(data.result);
+        } else {
+          // Fallback mock data for hackathon demo if no real txs exist
+          setRecentTxs([
+            {
+              from: address || "0x0",
+              to: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // Global Relief
+              value: "25000000000000000000", // 25 USDm
+              timeStamp: (Math.floor(new Date().getTime() / 1000) - 86400).toString()
+            },
+            {
+              from: "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf", // External wallet
+              to: address || "0x0",
+              value: "100000000000000000000", // 100 USDm
+              timeStamp: (Math.floor(new Date().getTime() / 1000) - (86400 * 3)).toString()
+            },
+            {
+              from: address || "0x0",
+              to: "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", // Water Project
+              value: "15000000000000000000", // 15 USDm
+              timeStamp: (Math.floor(new Date().getTime() / 1000) - (86400 * 7)).toString()
+            }
+          ]);
         }
       } catch (e) {
         console.error("Failed to fetch txs", e);
@@ -289,7 +311,7 @@ function RemitTab() {
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
             placeholder="0x..." 
-            className="w-full bg-white border-2 border-slate-900 rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
+            className="w-full min-w-0 bg-white border-2 border-slate-900 rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:outline-none"
           />
           <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
             <QrCode size={20} />
@@ -317,7 +339,7 @@ function RemitTab() {
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0.00" 
-            className="w-full bg-slate-50 border-2 border-slate-900 rounded-2xl p-4 pl-9 text-2xl font-black text-slate-800 focus:outline-none focus:bg-white transition-colors"
+            className="w-full min-w-0 bg-slate-50 border-2 border-slate-900 rounded-2xl p-4 pl-9 text-2xl font-black text-slate-800 focus:outline-none focus:bg-white transition-colors"
           />
         </div>
 
@@ -549,7 +571,7 @@ function ZakatTab() {
             value={recipient}
             onChange={(e) => { setRecipient(e.target.value); setError(""); }}
             placeholder="0x..." 
-            className={`w-full bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-slate-900'} rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:bg-white focus:outline-none transition-colors`}
+            className={`w-full min-w-0 bg-slate-50 border-2 ${error ? 'border-rose-400' : 'border-slate-900'} rounded-2xl p-4 text-slate-800 placeholder-slate-400 font-mono text-sm focus:bg-white focus:outline-none transition-colors`}
           />
           <button className="bg-white border-2 border-slate-900 p-4 rounded-2xl text-slate-900 hover:bg-slate-100 transition-colors shrink-0 flex items-center justify-center">
             <QrCode size={20} />
