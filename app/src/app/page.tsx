@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle } from "lucide-react";
+import { Send, HandCoins, ShieldCheck, Home, ArrowRight, CheckCircle2, History, Heart, Ban, QrCode, ChevronDown, AlertTriangle, XCircle } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnect, useAccount, useWriteContract, useReadContract } from "wagmi";
 import { injected } from "wagmi/connectors";
@@ -274,6 +274,8 @@ function RemitTab() {
   const [recipient, setRecipient] = useState("");
   const [amount, setAmount] = useState("");
   const [needsApproval, setNeedsApproval] = useState(true); // Simplified for MVP demo
+  const [txState, setTxState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [sliderVal, setSliderVal] = useState(0);
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
   
   const { writeContract, isPending } = useWriteContract();
@@ -290,6 +292,56 @@ function RemitTab() {
   const verifiedCharities = [
     { name: "Global Relief Fund", address: "0x5FbDB2315678afecb367f032d93F642f64180aa3" }
   ];
+
+  if (txState === 'loading') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-4 py-16 animate-in fade-in duration-300">
+        <div className="w-16 h-16 border-8 border-slate-200 border-t-[#87dbfb] rounded-full animate-spin"></div>
+        <h3 className="text-xl font-black text-slate-800">Processing...</h3>
+        <p className="text-slate-500 font-bold text-sm">Please wait while we confirm on-chain.</p>
+      </div>
+    );
+  }
+
+  if (txState === 'success') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-6 py-12 animate-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-green-400 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full flex items-center justify-center text-white">
+          <CheckCircle2 size={48} className="text-slate-900" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-3xl font-black text-slate-800 mb-2">Sent!</h3>
+          <p className="text-slate-500 font-bold">Your remittance was successful.</p>
+        </div>
+        <button 
+          onClick={() => { setTxState('idle'); setAmount(""); setSliderVal(0); setNeedsApproval(true); }}
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-3 px-8 font-black"
+        >
+          Send Another
+        </button>
+      </div>
+    );
+  }
+
+  if (txState === 'error') {
+    return (
+      <div className="flex flex-col items-center justify-center space-y-6 py-12 animate-in zoom-in duration-500">
+        <div className="w-24 h-24 bg-rose-400 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-full flex items-center justify-center text-white">
+          <XCircle size={48} className="text-slate-900" />
+        </div>
+        <div className="text-center">
+          <h3 className="text-3xl font-black text-slate-800 mb-2">Failed</h3>
+          <p className="text-slate-500 font-bold">Something went wrong with the transaction.</p>
+        </div>
+        <button 
+          onClick={() => { setTxState('idle'); setSliderVal(0); }}
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-3 px-8 font-black"
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 sm:space-y-5 animate-in slide-in-from-right-4 duration-500 pb-8">
@@ -383,37 +435,53 @@ function RemitTab() {
             });
           }}
           disabled={isApprovePending}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-2 sm:py-3 font-black text-sm sm:text-base flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
         >
           {isApprovePending ? "Approving..." : "Step 1: Approve USDm"}
         </button>
       ) : (
-        <button 
-          onClick={() => {
-            if (!recipient || !amount) return;
-            writeContract({
-              address: REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
-              abi: routerAbi,
-              functionName: 'sendRemittance',
-              args: [
-                USDM_ADDRESS as `0x${string}`,
-                recipient as `0x${string}`,
-                parseUnits(amount, 18),
-                "0x"
-              ]
-            }, {
-              onSuccess: () => {
-                alert("Transaction Sent!");
-                setNeedsApproval(true);
-              },
-              onError: (err) => console.error("Tx Failed:", err)
-            });
-          }}
-          disabled={isPending}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
-        >
-          {isPending ? "Sending..." : <>Step 2: Send <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" /></>}
-        </button>
+        <div className="relative w-full h-12 bg-white rounded-3xl sm:rounded-[2rem] border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] overflow-hidden">
+          <div className="absolute top-0 left-0 h-full bg-[#34d399] transition-all duration-75" style={{ width: `${sliderVal}%` }}></div>
+          <input 
+            type="range" 
+            min="0" max="100" 
+            value={sliderVal}
+            onChange={(e) => {
+              const val = parseInt(e.target.value);
+              setSliderVal(val);
+              if (val > 95) {
+                setSliderVal(100);
+                if (!recipient || !amount) return;
+                setTxState('loading');
+                writeContract({
+                  address: REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
+                  abi: routerAbi,
+                  functionName: 'sendRemittance',
+                  args: [
+                    USDM_ADDRESS as `0x${string}`,
+                    recipient as `0x${string}`,
+                    parseUnits(amount, 18),
+                    "0x"
+                  ]
+                }, {
+                  onSuccess: () => {
+                    setTxState('success');
+                  },
+                  onError: (err) => {
+                    console.error("Tx Failed:", err);
+                    setTxState('error');
+                  }
+                });
+              }
+            }}
+            onMouseUp={() => { if(sliderVal < 95) setSliderVal(0); }}
+            onTouchEnd={() => { if(sliderVal < 95) setSliderVal(0); }}
+            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-20"
+          />
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none font-black text-slate-900 text-sm sm:text-base z-10">
+            <span className="flex items-center gap-2">Step 2: Slide to Send <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" /></span>
+          </div>
+        </div>
       )}
     </div>
   );
@@ -604,7 +672,7 @@ function ZakatTab() {
       {!approved ? (
         <button 
           onClick={handleApprove}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl"
+          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-2 sm:py-3 font-black text-sm sm:text-base"
         >
           Review Payment
         </button>
