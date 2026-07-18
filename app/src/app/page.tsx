@@ -315,7 +315,7 @@ function RemitTab() {
         </div>
         <button 
           onClick={() => { setTxState('idle'); setAmount(""); setSliderVal(0); setNeedsApproval(true); }}
-          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-3 px-8 font-black"
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black"
         >
           Send Another
         </button>
@@ -335,7 +335,7 @@ function RemitTab() {
         </div>
         <button 
           onClick={() => { setTxState('idle'); setSliderVal(0); }}
-          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full py-3 px-8 font-black"
+          className="bg-white text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-full h-12 px-8 font-black"
         >
           Try Again
         </button>
@@ -435,13 +435,32 @@ function RemitTab() {
             });
           }}
           disabled={isApprovePending}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-2 sm:py-3 font-black text-sm sm:text-base flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
+          className="w-2/3 mx-auto h-12 bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] font-black text-sm sm:text-base flex justify-center items-center gap-2 disabled:opacity-50 disabled:active:translate-y-0 disabled:active:shadow-[4px_4px_0_0_#1a1a1a]"
         >
           {isApprovePending ? "Approving..." : "Step 1: Approve USDm"}
         </button>
       ) : (
-        <div className="relative w-full h-12 bg-white rounded-3xl sm:rounded-[2rem] border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] overflow-hidden">
-          <div className="absolute top-0 left-0 h-full bg-[#34d399] transition-all duration-75" style={{ width: `${sliderVal}%` }}></div>
+        <div className="relative w-2/3 mx-auto h-12 bg-white rounded-full border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] overflow-hidden group">
+          
+          {/* Background Fill */}
+          <div className="absolute top-0 left-0 h-full bg-[#34d399] transition-none" style={{ width: `${sliderVal}%` }}></div>
+          
+          {/* Text */}
+          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none font-black text-slate-900 text-xs sm:text-sm z-10 opacity-60">
+            Slide to Send
+          </div>
+
+          {/* Swipe Thumb */}
+          <div 
+            className="absolute top-0 flex items-center justify-center h-full aspect-square bg-slate-900 text-white rounded-full z-10 pointer-events-none transition-none shadow-sm"
+            style={{ 
+              left: `calc(${sliderVal}% - ${sliderVal * 40 / 100}px)`
+            }}
+          >
+            <ArrowRight className="w-5 h-5" />
+          </div>
+
+          {/* Invisible Range Input */}
           <input 
             type="range" 
             min="0" max="100" 
@@ -478,9 +497,6 @@ function RemitTab() {
             onTouchEnd={() => { if(sliderVal < 95) setSliderVal(0); }}
             className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer z-20"
           />
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none font-black text-slate-900 text-sm sm:text-base z-10">
-            <span className="flex items-center gap-2">Step 2: Slide to Send <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" /></span>
-          </div>
         </div>
       )}
     </div>
@@ -672,14 +688,14 @@ function ZakatTab() {
       {!approved ? (
         <button 
           onClick={handleApprove}
-          className="w-full bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] py-2 sm:py-3 font-black text-sm sm:text-base"
+          className="w-2/3 mx-auto h-12 bg-[#87dbfb] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] active:translate-y-1 active:shadow-[0px_0px_0_0_#1a1a1a] transition-all rounded-3xl sm:rounded-[2rem] font-black text-sm sm:text-base flex justify-center items-center gap-2"
         >
           Review Payment
         </button>
       ) : (
         <button 
           disabled
-          className="w-full bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-3xl sm:rounded-[2rem] py-3.5 sm:py-5 font-black text-lg sm:text-xl flex justify-center items-center gap-2 cursor-default"
+          className="w-2/3 mx-auto h-12 bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-3xl sm:rounded-[2rem] font-black text-sm sm:text-base flex justify-center items-center gap-2 cursor-default"
         >
           <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> Settled via x402
         </button>
