@@ -553,8 +553,42 @@ function ZakatTab() {
   const [saveAsDefault, setSaveAsDefault] = useState(false);
   const [error, setError] = useState("");
   const [defaultZakatAddress, setDefaultZakatAddress] = useState("0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf");
+  const [countdown, setCountdown] = useState({ d: 354, h: 23, m: 59, s: 59 });
   
   const { writeContract, isPending } = useWriteContract();
+
+  useEffect(() => {
+    if (approved) {
+      const interval = setInterval(() => {
+        setCountdown(prev => {
+          let { d, h, m, s } = prev;
+          if (s > 0) s--;
+          else {
+            s = 59;
+            if (m > 0) m--;
+            else {
+              m = 59;
+              if (h > 0) h--;
+              else {
+                h = 23;
+                if (d > 0) d--;
+              }
+            }
+          }
+          return { d, h, m, s };
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [approved]);
+
+  useEffect(() => {
+    if (address) {
+      const hasPaid = localStorage.getItem(`hasPaidZakat_${address}`);
+      if (hasPaid === "true") setApproved(true);
+      else setApproved(false);
+    }
+  }, [address]);
 
   useEffect(() => {
     const saved = localStorage.getItem("defaultZakatRecipient");
@@ -614,6 +648,9 @@ function ZakatTab() {
       onSuccess: () => {
         setApproved(true);
         setIsConfirming(false);
+        if (address) {
+          localStorage.setItem(`hasPaidZakat_${address}`, "true");
+        }
       },
       onError: (err: any) => {
         console.error(err);
@@ -736,12 +773,33 @@ function ZakatTab() {
           Review Payment
         </button>
       ) : (
-        <button 
-          disabled
-          className="w-2/3 mx-auto h-12 bg-[#a5ebd3] text-slate-900 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] rounded-3xl sm:rounded-[2rem] font-black text-sm sm:text-base flex justify-center items-center gap-2 cursor-default"
-        >
-          <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" /> Settled via x402
-        </button>
+        <div className="bg-[#a5ebd3] rounded-3xl sm:rounded-[2rem] p-4 sm:p-5 border-4 border-slate-900 shadow-[4px_4px_0_0_#1a1a1a] flex flex-col items-center justify-center animate-in zoom-in duration-500 w-full mt-2">
+          <div className="flex items-center gap-2 text-slate-900 font-black text-xl mb-3">
+            <CheckCircle2 className="w-7 h-7" /> Zakat Paid
+          </div>
+          <p className="text-slate-700 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-3">Next Zakat Due In</p>
+          <div className="flex gap-1.5 sm:gap-3 text-slate-900 font-mono font-black text-base sm:text-2xl">
+            <div className="flex flex-col items-center">
+              <span className="bg-white px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] w-10 sm:w-16 text-center">{countdown.d}</span>
+              <span className="text-[8px] sm:text-[10px] font-sans font-bold mt-1.5">DAYS</span>
+            </div>
+            <span className="py-2">:</span>
+            <div className="flex flex-col items-center">
+              <span className="bg-white px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] w-10 sm:w-14 text-center">{countdown.h.toString().padStart(2, '0')}</span>
+              <span className="text-[8px] sm:text-[10px] font-sans font-bold mt-1.5">HRS</span>
+            </div>
+            <span className="py-2">:</span>
+            <div className="flex flex-col items-center">
+              <span className="bg-white px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] w-10 sm:w-14 text-center">{countdown.m.toString().padStart(2, '0')}</span>
+              <span className="text-[8px] sm:text-[10px] font-sans font-bold mt-1.5">MIN</span>
+            </div>
+            <span className="py-2">:</span>
+            <div className="flex flex-col items-center">
+              <span className="bg-white px-2 py-1.5 sm:px-3 sm:py-2 rounded-lg border-2 border-slate-900 shadow-[2px_2px_0_0_#1a1a1a] w-10 sm:w-14 text-center text-rose-500">{countdown.s.toString().padStart(2, '0')}</span>
+              <span className="text-[8px] sm:text-[10px] font-sans font-bold mt-1.5">SEC</span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
