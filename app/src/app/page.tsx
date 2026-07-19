@@ -6,6 +6,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnect, useAccount, useWriteContract, useReadContract } from "wagmi";
 import { injected } from "wagmi/connectors";
 import { parseUnits, formatUnits } from "viem";
+import { toDataSuffix } from "@celo/attribution-tags";
 
 const REMITTANCE_ROUTER_ADDRESS = "0xACcfC2339645E0E18bD7B5a6FBB1C427dfdCED1e";
 const USDM_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a"; // Celo Mainnet cUSD (USDm)
@@ -566,7 +567,7 @@ function RemitTab() {
                 setSliderVal(100);
                 if (!recipient || !amount) return;
                 setTxState('loading');
-                writeContract({
+                    writeContract({
                   address: REMITTANCE_ROUTER_ADDRESS as `0x${string}`,
                   abi: routerAbi,
                   functionName: 'sendRemittance',
@@ -574,7 +575,7 @@ function RemitTab() {
                     USDM_ADDRESS as `0x${string}`,
                     recipient as `0x${string}`,
                     parseUnits(amount, 18),
-                    "0x"
+                    toDataSuffix(['halalflow', 'celo_88a40472cfb1']) as `0x${string}`
                   ]
                 }, {
                   onSuccess: () => {

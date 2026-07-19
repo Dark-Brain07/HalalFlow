@@ -1,0 +1,105 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isGetClaimConditionSupported = isGetClaimConditionSupported;
+exports.decodeGetClaimConditionResult = decodeGetClaimConditionResult;
+exports.getClaimCondition = getClaimCondition;
+const viem_1 = require("viem");
+const read_contract_js_1 = require("../../../../../transaction/read-contract.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+exports.FN_SELECTOR = "0x30a63e11";
+const FN_INPUTS = [];
+const FN_OUTPUTS = [
+    {
+        components: [
+            {
+                name: "availableSupply",
+                type: "uint256",
+            },
+            {
+                name: "allowlistMerkleRoot",
+                type: "bytes32",
+            },
+            {
+                name: "pricePerUnit",
+                type: "uint256",
+            },
+            {
+                name: "currency",
+                type: "address",
+            },
+            {
+                name: "maxMintPerWallet",
+                type: "uint256",
+            },
+            {
+                name: "startTimestamp",
+                type: "uint48",
+            },
+            {
+                name: "endTimestamp",
+                type: "uint48",
+            },
+            {
+                name: "auxData",
+                type: "string",
+            },
+        ],
+        name: "claimCondition",
+        type: "tuple",
+    },
+];
+/**
+ * Checks if the `getClaimCondition` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `getClaimCondition` method is supported.
+ * @modules ClaimableERC721
+ * @example
+ * ```ts
+ * import { ClaimableERC721 } from "thirdweb/modules";
+ * const supported = ClaimableERC721.isGetClaimConditionSupported(["0x..."]);
+ * ```
+ */
+function isGetClaimConditionSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Decodes the result of the getClaimCondition function call.
+ * @param result - The hexadecimal result to decode.
+ * @returns The decoded result as per the FN_OUTPUTS definition.
+ * @modules ClaimableERC721
+ * @example
+ * ```ts
+ * import { ClaimableERC721 } from "thirdweb/modules";
+ * const result = ClaimableERC721.decodeGetClaimConditionResultResult("...");
+ * ```
+ */
+function decodeGetClaimConditionResult(result) {
+    return (0, viem_1.decodeAbiParameters)(FN_OUTPUTS, result)[0];
+}
+/**
+ * Calls the "getClaimCondition" function on the contract.
+ * @param options - The options for the getClaimCondition function.
+ * @returns The parsed result of the function call.
+ * @modules ClaimableERC721
+ * @example
+ * ```ts
+ * import { ClaimableERC721 } from "thirdweb/modules";
+ *
+ * const result = await ClaimableERC721.getClaimCondition({
+ *  contract,
+ * });
+ *
+ * ```
+ */
+async function getClaimCondition(options) {
+    return (0, read_contract_js_1.readContract)({
+        contract: options.contract,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        params: [],
+    });
+}
+//# sourceMappingURL=getClaimCondition.js.map

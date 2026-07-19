@@ -1,0 +1,27 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @internal
+ */
+const injectedWalletLocaleRu = (wallet) => ({
+    connectionScreen: {
+        failed: "Подключение не удалось",
+        inProgress: "Ожидание подтверждения",
+        instruction: `Примите запрос на подключение в ${wallet}`,
+        retry: "Попробовать снова",
+    },
+    download: {
+        android: "Скачать в Google Play",
+        chrome: "Скачать расширение для Chrome",
+        iOS: "Скачать в App Store",
+    },
+    getStartedLink: `Ещё нет ${wallet}?`,
+    getStartedScreen: {
+        instruction: `Отсканируйте QR-код, чтобы скачать приложение ${wallet}`,
+    },
+    scanScreen: {
+        instruction: `Для подключения отсканируйте QR-код с помощью приложения ${wallet}`,
+    },
+});
+exports.default = injectedWalletLocaleRu;
+//# sourceMappingURL=ru.js.map

@@ -1,0 +1,230 @@
+"use client";
+import { CheckIcon } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { trackPayEvent } from "../../../../../analytics/track/pay.js";
+import type { ThirdwebClient } from "../../../../../client/client.js";
+import type { WindowAdapter } from "../../../../core/adapters/WindowAdapter.js";
+import { useCustomTheme } from "../../../../core/design-system/CustomThemeProvider.js";
+import { iconSize, spacing } from "../../../../core/design-system/index.js";
+import type { BridgePrepareResult } from "../../../../core/hooks/useBridgePrepare.js";
+import type { CompletedStatusResult } from "../../../../core/hooks/useStepExecutor.js";
+import { Container } from "../../components/basic.js";
+import { Button } from "../../components/buttons.js";
+import { Spacer } from "../../components/Spacer.js";
+import { Text } from "../../components/text.js";
+import { PaymentReceipt } from "./PaymentReceipt.js";
+
+type SuccessScreenProps = {
+  /**
+   * UI options
+   */
+  showContinueWithTx: boolean;
+  /**
+   * Prepared quote from Bridge.prepare
+   */
+  preparedQuote: BridgePrepareResult;
+
+  /**
+   * Completed status results from step execution
+   */
+  completedStatuses: CompletedStatusResult[];
+
+  /**
+   * Called when user closes the success screen
+   */
+  onDone: () => void;
+
+  /**
+   * Window adapter for opening URLs
+   */
+  windowAdapter: WindowAdapter;
+
+  client: ThirdwebClient;
+
+  /**
+   * Whether or not this payment is associated with a payment ID. If it does, we show a different message.
+   */
+  hasPaymentId: boolean;
+
+  type: "swap-success" | "payment-success";
+};
+
+type ViewState = "success" | "detail";
+
+export function SuccessScreen({
+  preparedQuote,
+  completedStatuses,
+  onDone,
+  windowAdapter,
+  client,
+  hasPaymentId = false,
+  showContinueWithTx,
+  type,
+}: SuccessScreenProps) {
+  const theme = useCustomTheme();
+  const [viewState, setViewState] = useState<ViewState>("success");
+  const queryClient = useQueryClient();
+
+  const hasFiredSuccessEvent = useRef(false);
+  useEffect(() => {
+    if (hasFiredSuccessEvent.current) return;
+    hasFiredSuccessEvent.current = true;
+
+    if (preparedQuote.type === "buy" || preparedQuote.type === "sell") {
+      trackPayEvent({
+        chainId: preparedQuote.intent.originChainId,
+        client: client,
+        event: "ub:ui:success_screen",
+        fromToken: preparedQuote.intent.originTokenAddress,
+        toChainId: preparedQuote.intent.destinationChainId,
+        toToken: preparedQuote.intent.destinationTokenAddress,
+        walletAddress: preparedQuote.intent.sender,
+      });
+    }
+    if (preparedQuote.type === "transfer") {
+      trackPayEvent({
+        chainId: preparedQuote.intent.chainId,
+        client: client,
+        event: "ub:ui:success_screen",
+        fromToken: preparedQuote.intent.tokenAddress,
+        toChainId: preparedQuote.intent.chainId,
+        toToken: preparedQuote.intent.tokenAddress,
+        walletAddress: preparedQuote.intent.sender,
+      });
+    }
+    queryClient.invalidateQueries({
+      queryKey: ["bridge/v1/wallets"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["walletBalance"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["payment-methods"],
+    });
+  }, [client, preparedQuote, queryClient]);
+
+  if (viewState === "detail") {
+    return (
+      <PaymentReceipt
+        completedStatuses={completedStatuses}
+        onBack={() => setViewState("success")}
+        preparedQuote={preparedQuote}
+        windowAdapter={windowAdapter}
+      />
+    );
+  }
+
+  const title =
+    type === "swap-success" ? "Swap Successful" : "Payment Successful";
+  const description =
+    type === "swap-success"
+      ? "Your token swap has been completed successfully."
+      : "Your payment has been completed successfully.";
+
+  return (
+    <Container flex="column" fullHeight px="md" pb="md" pt="md+">
+      <Spacer y="3xl" />
+
+      <Container center="x" flex="column" gap="md">
+        {/* Success Icon with Animation */}
+        <Container
+          center="both"
+          flex="row"
+          style={{
+            animation: "successBounce 0.6s ease-out",
+            border: `2px solid ${theme.colors.success}`,
+            borderRadius: "50%",
+            height: "64px",
+            marginBottom: "16px",
+            width: "64px",
+          }}
+        >
+          <CheckIcon
+            color={theme.colors.success}
+            height={iconSize.xl}
+            style={{
+              animation: "checkAppear 0.3s ease-out 0.3s both",
+            }}
+            width={iconSize.xl}
+          />
+        </Container>
+
+        <div>
+          <Text
+            center
+            color="primaryText"
+            size="xl"
+            weight={600}
+            trackingTight
+            style={{
+              marginBottom: spacing.xxs,
+            }}
+          >
+            {title}
+          </Text>
+
+          <Text center color="secondaryText" size="sm">
+            {hasPaymentId
+              ? "You can now close this page and return to the application."
+              : showContinueWithTx
+                ? "Click continue to execute your transaction."
+                : description}
+          </Text>
+        </div>
+      </Container>
+
+      <Spacer y="3xl" />
+
+      {/* Action Buttons */}
+      <Container flex="column" gap="sm" style={{ width: "100%" }}>
+        <Button
+          fullWidth
+          onClick={() => setViewState("detail")}
+          variant="secondary"
+        >
+          View Transaction Receipt
+        </Button>
+
+        {!hasPaymentId && (
+          <Button fullWidth onClick={onDone} variant="accent">
+            {showContinueWithTx ? "Continue" : "Done"}
+          </Button>
+        )}
+      </Container>
+
+      {/* CSS Animations */}
+      <style>
+        {`
+          @keyframes successBounce {
+            0% {
+              transform: scale(0.3);
+              opacity: 0;
+            }
+            50% {
+              transform: scale(1.05);
+            }
+            70% {
+              transform: scale(0.9);
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+
+          @keyframes checkAppear {
+            0% {
+              transform: scale(0);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+        `}
+      </style>
+    </Container>
+  );
+}

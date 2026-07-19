@@ -1,0 +1,34 @@
+import { type EIP6963ProviderDetail } from "mipd";
+import type { Ethereum } from "../interfaces/ethereum.js";
+import type { Wallet } from "../interfaces/wallet.js";
+import type { WalletId } from "../wallet-types.js";
+declare module "mipd" {
+    interface Register {
+        rdns: WalletId;
+    }
+}
+/**
+ * Get Injected Provider for given wallet by passing a wallet ID (rdns) using [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) Provider Discovery.
+ * @param walletId - The Wallet Id (rdns) to check.
+ * @example
+ * ```ts
+ * import { injectedProvider } from "thirdweb/wallets";
+ *
+ * const metamaskProvider = injectedProvider("io.metamask");
+ *
+ * if (metamaskProvider) {
+ *  console.log("Metamask is installed");
+ * }
+ * ```
+ * @returns The details of the Injected Provider if it exists. `undefined` otherwise.
+ * @walletUtils
+ */
+export declare function injectedProvider(walletId: WalletId): Ethereum | undefined;
+/**
+ * Get All currently installed wallets.
+ * Uses EIP-6963 to discover installed browser extension wallets.
+ * @returns a list of installed wallets
+ */
+export declare function getInstalledWallets(): Wallet[];
+export declare function getInstalledWalletProviders(): readonly EIP6963ProviderDetail[];
+//# sourceMappingURL=mipdStore.d.ts.map

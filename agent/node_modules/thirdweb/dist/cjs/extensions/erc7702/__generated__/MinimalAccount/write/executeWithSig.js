@@ -1,0 +1,152 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isExecuteWithSigSupported = isExecuteWithSigSupported;
+exports.encodeExecuteWithSigParams = encodeExecuteWithSigParams;
+exports.encodeExecuteWithSig = encodeExecuteWithSig;
+exports.executeWithSig = executeWithSig;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0xba61557d";
+const FN_INPUTS = [
+    {
+        type: "tuple",
+        name: "wrappedCalls",
+        components: [
+            {
+                type: "tuple[]",
+                name: "calls",
+                components: [
+                    {
+                        type: "address",
+                        name: "target",
+                    },
+                    {
+                        type: "uint256",
+                        name: "value",
+                    },
+                    {
+                        type: "bytes",
+                        name: "data",
+                    },
+                ],
+            },
+            {
+                type: "bytes32",
+                name: "uid",
+            },
+        ],
+    },
+    {
+        type: "bytes",
+        name: "signature",
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `executeWithSig` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `executeWithSig` method is supported.
+ * @extension ERC7702
+ * @example
+ * ```ts
+ * import { isExecuteWithSigSupported } from "thirdweb/extensions/erc7702";
+ *
+ * const supported = isExecuteWithSigSupported(["0x..."]);
+ * ```
+ */
+function isExecuteWithSigSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "executeWithSig" function.
+ * @param options - The options for the executeWithSig function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC7702
+ * @example
+ * ```ts
+ * import { encodeExecuteWithSigParams } from "thirdweb/extensions/erc7702";
+ * const result = encodeExecuteWithSigParams({
+ *  wrappedCalls: ...,
+ *  signature: ...,
+ * });
+ * ```
+ */
+function encodeExecuteWithSigParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [
+        options.wrappedCalls,
+        options.signature,
+    ]);
+}
+/**
+ * Encodes the "executeWithSig" function into a Hex string with its parameters.
+ * @param options - The options for the executeWithSig function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC7702
+ * @example
+ * ```ts
+ * import { encodeExecuteWithSig } from "thirdweb/extensions/erc7702";
+ * const result = encodeExecuteWithSig({
+ *  wrappedCalls: ...,
+ *  signature: ...,
+ * });
+ * ```
+ */
+function encodeExecuteWithSig(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeExecuteWithSigParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "executeWithSig" function on the contract.
+ * @param options - The options for the "executeWithSig" function.
+ * @returns A prepared transaction object.
+ * @extension ERC7702
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { executeWithSig } from "thirdweb/extensions/erc7702";
+ *
+ * const transaction = executeWithSig({
+ *  contract,
+ *  wrappedCalls: ...,
+ *  signature: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function executeWithSig(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        contract: options.contract,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [resolvedOptions.wrappedCalls, resolvedOptions.signature];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+    });
+}
+//# sourceMappingURL=executeWithSig.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"TokensStaked.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc20/__generated__/IStaking20/events/TokensStaked.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAarE;;;;;;;;;;;;;;;;;;;GAmBG;AACH,MAAM,UAAU,iBAAiB,CAAC,UAAoC,EAAE;IACtE,OAAO,YAAY,CAAC;QAClB,OAAO;QACP,SAAS,EAAE,4DAA4D;KACxE,CAAC,CAAC;AACL,CAAC"}

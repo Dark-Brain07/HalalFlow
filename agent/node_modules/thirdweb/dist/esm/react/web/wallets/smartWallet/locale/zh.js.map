@@ -1,0 +1,1 @@
+{"version":3,"file":"zh.js","sourceRoot":"","sources":["../../../../../../../src/react/web/wallets/smartWallet/locale/zh.ts"],"names":[],"mappings":"AAEA,MAAM,kBAAkB,GAAsB;IAC5C,UAAU,EAAE,UAAU;IACtB,eAAe,EAAE,UAAU;IAC3B,kBAAkB,EAAE;QAClB,cAAc,EAAE,QAAQ;QACxB,QAAQ,EAAE,YAAY;QACtB,KAAK,EAAE,MAAM;KACd;CACF,CAAC;AAEF,eAAe,kBAAkB,CAAC"}

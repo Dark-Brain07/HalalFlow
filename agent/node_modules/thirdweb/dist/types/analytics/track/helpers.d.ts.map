@@ -1,0 +1,1 @@
+{"version":3,"file":"helpers.d.ts","sourceRoot":"","sources":["../../../../src/analytics/track/helpers.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,wBAAgB,wBAAwB,CAAC,KAAK,EAAE,KAAK,GAAG,OAAO,GAAG,OAAO,CAsBxE;AAED;;GAEG;AACH,wBAAgB,eAAe,CAAC,KAAK,EAAE,KAAK,GAAG,OAAO,GAAG;IACvD,OAAO,EAAE,MAAM,CAAC;IAChB,IAAI,CAAC,EAAE,MAAM,GAAG,MAAM,CAAC;CACxB,CAeA"}

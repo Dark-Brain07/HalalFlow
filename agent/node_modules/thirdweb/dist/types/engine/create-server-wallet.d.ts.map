@@ -1,0 +1,1 @@
+{"version":3,"file":"create-server-wallet.d.ts","sourceRoot":"","sources":["../../../src/engine/create-server-wallet.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,qBAAqB,CAAC;AAI1D,MAAM,MAAM,sBAAsB,GAAG;IACnC,MAAM,EAAE,cAAc,CAAC;IACvB,KAAK,EAAE,MAAM,CAAC;CACf,CAAC;AAEF;;;;;;;;;;;;;;;;;;GAkBG;AACH,wBAAsB,kBAAkB,CAAC,MAAM,EAAE,sBAAsB;;;;;GA0BtE"}

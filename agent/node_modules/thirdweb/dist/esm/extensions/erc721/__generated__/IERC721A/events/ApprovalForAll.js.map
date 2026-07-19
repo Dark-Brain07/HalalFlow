@@ -1,0 +1,1 @@
+{"version":3,"file":"ApprovalForAll.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc721/__generated__/IERC721A/events/ApprovalForAll.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAkBrE;;;;;;;;;;;;;;;;;;;;GAoBG;AACH,MAAM,UAAU,mBAAmB,CAAC,UAAsC,EAAE;IAC1E,OAAO,YAAY,CAAC;QAClB,OAAO;QACP,SAAS,EACP,sFAAsF;KACzF,CAAC,CAAC;AACL,CAAC"}

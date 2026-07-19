@@ -1,0 +1,185 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isClaimSupported = isClaimSupported;
+exports.encodeClaimParams = encodeClaimParams;
+exports.encodeClaim = encodeClaim;
+exports.claim = claim;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0x84bb1e42";
+const FN_INPUTS = [
+    {
+        name: "receiver",
+        type: "address",
+    },
+    {
+        name: "quantity",
+        type: "uint256",
+    },
+    {
+        name: "currency",
+        type: "address",
+    },
+    {
+        name: "pricePerToken",
+        type: "uint256",
+    },
+    {
+        components: [
+            {
+                name: "proof",
+                type: "bytes32[]",
+            },
+            {
+                name: "quantityLimitPerWallet",
+                type: "uint256",
+            },
+            {
+                name: "pricePerToken",
+                type: "uint256",
+            },
+            {
+                name: "currency",
+                type: "address",
+            },
+        ],
+        name: "allowlistProof",
+        type: "tuple",
+    },
+    {
+        name: "data",
+        type: "bytes",
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `claim` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `claim` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isClaimSupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isClaimSupported(["0x..."]);
+ * ```
+ */
+function isClaimSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "claim" function.
+ * @param options - The options for the claim function.
+ * @returns The encoded ABI parameters.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeClaimParams } from "thirdweb/extensions/erc721";
+ * const result = encodeClaimParams({
+ *  receiver: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  pricePerToken: ...,
+ *  allowlistProof: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+function encodeClaimParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [
+        options.receiver,
+        options.quantity,
+        options.currency,
+        options.pricePerToken,
+        options.allowlistProof,
+        options.data,
+    ]);
+}
+/**
+ * Encodes the "claim" function into a Hex string with its parameters.
+ * @param options - The options for the claim function.
+ * @returns The encoded hexadecimal string.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { encodeClaim } from "thirdweb/extensions/erc721";
+ * const result = encodeClaim({
+ *  receiver: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  pricePerToken: ...,
+ *  allowlistProof: ...,
+ *  data: ...,
+ * });
+ * ```
+ */
+function encodeClaim(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeClaimParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "claim" function on the contract.
+ * @param options - The options for the "claim" function.
+ * @returns A prepared transaction object.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { claim } from "thirdweb/extensions/erc721";
+ *
+ * const transaction = claim({
+ *  contract,
+ *  receiver: ...,
+ *  quantity: ...,
+ *  currency: ...,
+ *  pricePerToken: ...,
+ *  allowlistProof: ...,
+ *  data: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function claim(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+        contract: options.contract,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [
+                resolvedOptions.receiver,
+                resolvedOptions.quantity,
+                resolvedOptions.currency,
+                resolvedOptions.pricePerToken,
+                resolvedOptions.allowlistProof,
+                resolvedOptions.data,
+            ];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+    });
+}
+//# sourceMappingURL=claim.js.map

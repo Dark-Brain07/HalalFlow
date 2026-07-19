@@ -1,0 +1,180 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isCastVoteWithReasonAndParamsBySigSupported = isCastVoteWithReasonAndParamsBySigSupported;
+exports.encodeCastVoteWithReasonAndParamsBySigParams = encodeCastVoteWithReasonAndParamsBySigParams;
+exports.encodeCastVoteWithReasonAndParamsBySig = encodeCastVoteWithReasonAndParamsBySig;
+exports.castVoteWithReasonAndParamsBySig = castVoteWithReasonAndParamsBySig;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0x03420181";
+const FN_INPUTS = [
+    {
+        name: "proposalId",
+        type: "uint256",
+    },
+    {
+        name: "support",
+        type: "uint8",
+    },
+    {
+        name: "reason",
+        type: "string",
+    },
+    {
+        name: "params",
+        type: "bytes",
+    },
+    {
+        name: "v",
+        type: "uint8",
+    },
+    {
+        name: "r",
+        type: "bytes32",
+    },
+    {
+        name: "s",
+        type: "bytes32",
+    },
+];
+const FN_OUTPUTS = [
+    {
+        type: "uint256",
+    },
+];
+/**
+ * Checks if the `castVoteWithReasonAndParamsBySig` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `castVoteWithReasonAndParamsBySig` method is supported.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { isCastVoteWithReasonAndParamsBySigSupported } from "thirdweb/extensions/vote";
+ *
+ * const supported = isCastVoteWithReasonAndParamsBySigSupported(["0x..."]);
+ * ```
+ */
+function isCastVoteWithReasonAndParamsBySigSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "castVoteWithReasonAndParamsBySig" function.
+ * @param options - The options for the castVoteWithReasonAndParamsBySig function.
+ * @returns The encoded ABI parameters.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeCastVoteWithReasonAndParamsBySigParams } from "thirdweb/extensions/vote";
+ * const result = encodeCastVoteWithReasonAndParamsBySigParams({
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ * });
+ * ```
+ */
+function encodeCastVoteWithReasonAndParamsBySigParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [
+        options.proposalId,
+        options.support,
+        options.reason,
+        options.params,
+        options.v,
+        options.r,
+        options.s,
+    ]);
+}
+/**
+ * Encodes the "castVoteWithReasonAndParamsBySig" function into a Hex string with its parameters.
+ * @param options - The options for the castVoteWithReasonAndParamsBySig function.
+ * @returns The encoded hexadecimal string.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { encodeCastVoteWithReasonAndParamsBySig } from "thirdweb/extensions/vote";
+ * const result = encodeCastVoteWithReasonAndParamsBySig({
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ * });
+ * ```
+ */
+function encodeCastVoteWithReasonAndParamsBySig(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeCastVoteWithReasonAndParamsBySigParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "castVoteWithReasonAndParamsBySig" function on the contract.
+ * @param options - The options for the "castVoteWithReasonAndParamsBySig" function.
+ * @returns A prepared transaction object.
+ * @extension VOTE
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { castVoteWithReasonAndParamsBySig } from "thirdweb/extensions/vote";
+ *
+ * const transaction = castVoteWithReasonAndParamsBySig({
+ *  contract,
+ *  proposalId: ...,
+ *  support: ...,
+ *  reason: ...,
+ *  params: ...,
+ *  v: ...,
+ *  r: ...,
+ *  s: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function castVoteWithReasonAndParamsBySig(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+        contract: options.contract,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [
+                resolvedOptions.proposalId,
+                resolvedOptions.support,
+                resolvedOptions.reason,
+                resolvedOptions.params,
+                resolvedOptions.v,
+                resolvedOptions.r,
+                resolvedOptions.s,
+            ];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+    });
+}
+//# sourceMappingURL=castVoteWithReasonAndParamsBySig.js.map

@@ -1,0 +1,38 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetchContractMetadata = fetchContractMetadata;
+const base64_js_1 = require("../base64/base64.js");
+const utf8_js_1 = require("../utf8/utf8.js");
+/**
+ * Fetches the metadata for a token.
+ *
+ * @param options - The options for fetching the token metadata.
+ * @returns The token metadata.
+ * @internal
+ */
+async function fetchContractMetadata(options) {
+    const { client, uri } = options;
+    // handle case where the URI is a base64 encoded JSON
+    if ((0, base64_js_1.isBase64JSON)(uri)) {
+        try {
+            return JSON.parse((0, base64_js_1.parseBase64String)(uri));
+        }
+        catch (e) {
+            console.error("Failed to decode base64 encoded contract metadata", { uri }, e);
+            return undefined;
+        }
+    }
+    if ((0, utf8_js_1.isUTF8JSONString)(uri)) {
+        try {
+            return JSON.parse((0, utf8_js_1.parseUTF8String)(uri));
+        }
+        catch (e) {
+            console.error("Failed to fetch utf8 encoded contract metadata", { uri }, e);
+            return undefined;
+        }
+    }
+    // in all other cases we will need the `download` function from storage
+    const { download } = await Promise.resolve().then(() => require("../../storage/download.js"));
+    return await (await download({ client, uri })).json();
+}
+//# sourceMappingURL=fetchContractMetadata.js.map

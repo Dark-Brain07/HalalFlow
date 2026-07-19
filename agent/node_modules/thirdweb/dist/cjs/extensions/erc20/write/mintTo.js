@@ -1,0 +1,53 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isMintToSupported = void 0;
+exports.mintTo = mintTo;
+const units_js_1 = require("../../../utils/units.js");
+const mintTo_js_1 = require("../__generated__/IMintableERC20/write/mintTo.js");
+var mintTo_js_2 = require("../__generated__/IMintableERC20/write/mintTo.js");
+Object.defineProperty(exports, "isMintToSupported", { enumerable: true, get: function () { return mintTo_js_2.isMintToSupported; } });
+/**
+ * Mints a specified amount of tokens to a given address.
+ * This method is only available on the `TokenERC20` contract.
+ * @param options - The options for minting tokens.
+ * @returns A prepared transaction object.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { mintTo } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = mintTo({
+ *  contract,
+ *  to: "0x...",
+ *  amount: 100,
+ * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function mintTo(options) {
+    return (0, mintTo_js_1.mintTo)({
+        asyncParams: async () => {
+            let amount;
+            if ("amount" in options) {
+                // if we need to parse the amount from ether to gwei then we pull in the decimals extension
+                const { decimals } = await Promise.resolve().then(() => require("../read/decimals.js"));
+                // if this fails we fall back to `18` decimals
+                const d = await decimals(options).catch(() => 18);
+                // turn ether into gwei
+                amount = (0, units_js_1.toUnits)(options.amount.toString(), d);
+            }
+            else {
+                amount = options.amountWei;
+            }
+            return {
+                amount: amount,
+                overrides: options.overrides,
+                to: options.to,
+            };
+        },
+        contract: options.contract,
+    });
+}
+//# sourceMappingURL=mintTo.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"kr.js","sourceRoot":"","sources":["../../../../../../../src/react/web/wallets/smartWallet/locale/kr.ts"],"names":[],"mappings":";;AAEA,MAAM,iBAAiB,GAAsB;IAC3C,UAAU,EAAE,cAAc;IAC1B,eAAe,EAAE,oBAAoB;IACrC,kBAAkB,EAAE;QAClB,cAAc,EAAE,YAAY;QAC5B,QAAQ,EAAE,4BAA4B;QACtC,KAAK,EAAE,UAAU;KAClB;CACF,CAAC;AACF,kBAAe,iBAAiB,CAAC"}

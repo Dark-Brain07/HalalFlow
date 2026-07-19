@@ -1,0 +1,1 @@
+{"version":3,"file":"RewardClaimed.js","sourceRoot":"","sources":["../../../../../../../src/extensions/tokens/__generated__/ERC20Entrypoint/events/RewardClaimed.ts"],"names":[],"mappings":";;AAmBA,gDAIC;AAvBD,4EAAqE;AAErE;;;;;;;;;;;;;;;;GAgBG;AACH,SAAgB,kBAAkB;IAChC,OAAO,IAAA,+BAAY,EAAC;QAClB,SAAS,EAAE,qDAAqD;KACjE,CAAC,CAAC;AACL,CAAC"}

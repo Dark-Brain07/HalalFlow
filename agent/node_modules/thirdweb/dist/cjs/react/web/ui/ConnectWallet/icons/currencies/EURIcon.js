@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.EURIcon = void 0;
+const jsx_runtime_1 = require("react/jsx-runtime");
+const react_1 = require("react");
+const EURIcon = (props) => {
+    const id = (0, react_1.useId)();
+    return ((0, jsx_runtime_1.jsxs)("svg", { "aria-hidden": "true", height: props.size, viewBox: "0 0 512 512", width: props.size, xmlns: "http://www.w3.org/2000/svg", children: [(0, jsx_runtime_1.jsx)("mask", { id: id, children: (0, jsx_runtime_1.jsx)("circle", { cx: "256", cy: "256", fill: "#fff", r: "256" }) }), (0, jsx_runtime_1.jsxs)("g", { mask: `url(#${id})`, children: [(0, jsx_runtime_1.jsx)("path", { d: "M0 0h512v512H0z", fill: "#0052b4" }), (0, jsx_runtime_1.jsx)("path", { d: "m256 100.2 8.3 25.5H291l-21.7 15.7 8.3 25.6-21.7-15.8-21.7 15.8 8.3-25.6-21.7-15.7h26.8zm-110.2 45.6 24 12.2 18.9-19-4.2 26.5 23.9 12.2-26.5 4.2-4.2 26.5-12.2-24-26.5 4.3 19-19zM100.2 256l25.5-8.3V221l15.7 21.7 25.6-8.3-15.8 21.7 15.8 21.7-25.6-8.3-15.7 21.7v-26.8zm45.6 110.2 12.2-24-19-18.9 26.5 4.2 12.2-23.9 4.2 26.5 26.5 4.2-24 12.2 4.3 26.5-19-19zM256 411.8l-8.3-25.5H221l21.7-15.7-8.3-25.6 21.7 15.8 21.7-15.8-8.3 25.6 21.7 15.7h-26.8zm110.2-45.6-24-12.2-18.9 19 4.2-26.5-23.9-12.2 26.5-4.2 4.2-26.5 12.2 24 26.5-4.3-19 19zM411.8 256l-25.5 8.3V291l-15.7-21.7-25.6 8.3 15.8-21.7-15.8-21.7 25.6 8.3 15.7-21.7v26.8zm-45.6-110.2-12.2 24 19 18.9-26.5-4.2-12.2 23.9-4.2-26.5-26.5-4.2 24-12.2-4.3-26.5 19 19z", fill: "#ffda44" })] })] }));
+};
+exports.EURIcon = EURIcon;
+//# sourceMappingURL=EURIcon.js.map

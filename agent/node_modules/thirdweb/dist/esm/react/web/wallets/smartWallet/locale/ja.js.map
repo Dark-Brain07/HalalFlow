@@ -1,0 +1,1 @@
+{"version":3,"file":"ja.js","sourceRoot":"","sources":["../../../../../../../src/react/web/wallets/smartWallet/locale/ja.ts"],"names":[],"mappings":"AAEA,MAAM,iBAAiB,GAAsB;IAC3C,UAAU,EAAE,eAAe;IAC3B,eAAe,EAAE,sBAAsB;IACvC,kBAAkB,EAAE;QAClB,cAAc,EAAE,oBAAoB;QACpC,QAAQ,EAAE,2BAA2B;QACrC,KAAK,EAAE,aAAa;KACrB;CACF,CAAC;AACF,eAAe,iBAAiB,CAAC"}

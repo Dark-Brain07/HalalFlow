@@ -1,0 +1,1 @@
+{"version":3,"file":"in-app-wallet-icon.d.ts","sourceRoot":"","sources":["../../../../../../src/react/web/ui/ConnectWallet/in-app-wallet-icon.tsx"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,8BAA8B,CAAC;AACnE,OAAO,KAAK,EAAE,MAAM,EAAE,MAAM,0CAA0C,CAAC;AAgBvE,wBAAgB,eAAe,CAAC,KAAK,EAAE;IACrC,MAAM,EAAE,cAAc,CAAC;IACvB,MAAM,EAAE,MAAM,CAAC,OAAO,CAAC,CAAC;CACzB,kDAsIA"}

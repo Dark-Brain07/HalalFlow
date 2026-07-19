@@ -1,0 +1,1 @@
+{"version":3,"file":"Transfer.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc721/__generated__/IERC721A/events/Transfer.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAuBrE;;;;;;;;;;;;;;;;;;;;;GAqBG;AACH,MAAM,UAAU,aAAa,CAAC,UAAgC,EAAE;IAC9D,OAAO,YAAY,CAAC;QAClB,OAAO;QACP,SAAS,EACP,mFAAmF;KACtF,CAAC,CAAC;AACL,CAAC"}

@@ -1,0 +1,61 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sortWallets = sortWallets;
+const mipdStore_js_1 = require("../../../wallets/injected/mipdStore.js");
+const storage_js_1 = require("../ui/ConnectWallet/Modal/storage.js");
+/**
+ *
+ * @internal
+ */
+function sortWallets(wallets, recommendedWallets) {
+    const providers = (0, mipdStore_js_1.getInstalledWalletProviders)();
+    const lastUsedWalletId = (0, storage_js_1.getLastUsedWalletId)();
+    return (wallets
+        // show the installed wallets first
+        .sort((a, b) => {
+        const aInstalled = providers.find((p) => p.info.rdns === a.id);
+        const bInstalled = providers.find((p) => p.info.rdns === b.id);
+        if (aInstalled && !bInstalled) {
+            return -1;
+        }
+        if (!aInstalled && bInstalled) {
+            return 1;
+        }
+        return 0;
+    })
+        // show the recommended wallets even before that
+        .sort((a, b) => {
+        const aIsRecommended = recommendedWallets?.find((w) => w.id === a.id);
+        const bIsRecommended = recommendedWallets?.find((w) => w.id === b.id);
+        if (aIsRecommended && !bIsRecommended) {
+            return -1;
+        }
+        if (!aIsRecommended && bIsRecommended) {
+            return 1;
+        }
+        return 0;
+    })
+        // show the last used wallet even before recommended wallets
+        .sort((a, b) => {
+        if (a.id === lastUsedWalletId) {
+            return -1;
+        }
+        if (b.id === lastUsedWalletId) {
+            return 1;
+        }
+        return 0;
+    })
+        // show in-app wallets first
+        .sort((a, b) => {
+        const aIsInApp = a.id === "inApp" || a.id === "embedded";
+        const bIsInApp = b.id === "inApp" || b.id === "embedded";
+        if (aIsInApp && !bIsInApp) {
+            return -1;
+        }
+        if (!aIsInApp && bIsInApp) {
+            return 1;
+        }
+        return 0;
+    }));
+}
+//# sourceMappingURL=sortWallets.js.map

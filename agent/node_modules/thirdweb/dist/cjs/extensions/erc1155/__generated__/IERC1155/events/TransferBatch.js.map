@@ -1,0 +1,1 @@
+{"version":3,"file":"TransferBatch.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc1155/__generated__/IERC1155/events/TransferBatch.ts"],"names":[],"mappings":";;AA8CA,gDAMC;AAnDD,4EAAqE;AAuBrE;;;;;;;;;;;;;;;;;;;;;GAqBG;AACH,SAAgB,kBAAkB,CAAC,UAAqC,EAAE;IACxE,OAAO,IAAA,+BAAY,EAAC;QAClB,OAAO;QACP,SAAS,EACP,mIAAmI;KACtI,CAAC,CAAC;AACL,CAAC"}

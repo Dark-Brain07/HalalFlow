@@ -1,0 +1,14 @@
+import type { AuthOption } from "../../../../wallets/types.js";
+import type { WalletId } from "../../../wallet-types.js";
+import type { AuthStoredTokenWithCookieReturnType } from "../../core/authentication/types.js";
+/**
+ * Checks for an auth token and associated metadata in the current URL
+ */
+export declare function getUrlToken(): {
+    walletId?: WalletId;
+    authResult?: AuthStoredTokenWithCookieReturnType;
+    authProvider?: AuthOption;
+    authCookie?: string;
+    authFlow?: "connect" | "link";
+} | undefined;
+//# sourceMappingURL=get-url-token.d.ts.map

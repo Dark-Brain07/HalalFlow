@@ -1,0 +1,12 @@
+/**
+ * @internal
+ * Utility for merging class names
+ *
+ * @example
+ * ```ts
+ * cls("foo", "bar", true, false, "baz") // "foo bar baz"
+ * cls('foo', someCondition && "bar") // "foo bar" or "foo"
+ * ```
+ */
+export declare function cls(...classes: (string | unknown)[]): string;
+//# sourceMappingURL=cls.d.ts.map

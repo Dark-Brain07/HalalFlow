@@ -1,0 +1,1 @@
+{"version":3,"file":"TokensWithdrawn.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc20/__generated__/IStaking20/events/TokensWithdrawn.ts"],"names":[],"mappings":";;AAkCA,oDAOC;AAxCD,4EAAqE;AAarE;;;;;;;;;;;;;;;;;;;GAmBG;AACH,SAAgB,oBAAoB,CAClC,UAAuC,EAAE;IAEzC,OAAO,IAAA,+BAAY,EAAC;QAClB,OAAO;QACP,SAAS,EAAE,+DAA+D;KAC3E,CAAC,CAAC;AACL,CAAC"}

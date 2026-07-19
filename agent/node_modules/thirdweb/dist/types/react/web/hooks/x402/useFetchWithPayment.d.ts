@@ -1,0 +1,271 @@
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { Theme } from "../../../core/design-system/index.js";
+import { type UseFetchWithPaymentOptions } from "../../../core/hooks/x402/useFetchWithPaymentCore.js";
+import type { BuyWidgetProps } from "../../ui/Bridge/BuyWidget.js";
+import { type UseConnectModalOptions } from "../../ui/ConnectWallet/useConnectModal.js";
+export type { UseFetchWithPaymentOptions };
+type UseFetchWithPaymentConfig = UseFetchWithPaymentOptions & {
+    /**
+     * Whether to show the UI for connection, funding or payment retries.
+     * If false, no UI will be shown and errors will have to be handled manually.
+     * @default true
+     */
+    uiEnabled?: boolean;
+    /**
+     * Theme for the payment error modal
+     * @default "dark"
+     */
+    theme?: Theme | "light" | "dark";
+    /**
+     * Options to customize the BuyWidget that appears when the user needs to fund their wallet.
+     * These options will be merged with default values.
+     */
+    fundWalletOptions?: Partial<Omit<BuyWidgetProps, "client" | "chain" | "tokenAddress" | "onSuccess" | "onCancel" | "theme">>;
+    /**
+     * Options to customize the ConnectModal that appears when the user needs to sign in.
+     * These options will be merged with the client, theme, and chain from the hook.
+     */
+    connectOptions?: Omit<UseConnectModalOptions, "client" | "theme">;
+    /**
+     * Options to customize the SignInRequiredModal that appears when the user needs to sign in.
+     */
+    signInRequiredModal?: {
+        /** Custom title for the modal header */
+        title?: string;
+        /** Custom description text */
+        description?: string;
+        /** Custom label for the sign in button */
+        buttonLabel?: string;
+    };
+};
+/**
+ * A React hook that wraps the native fetch API to automatically handle 402 Payment Required responses
+ * using the x402 payment protocol with the currently connected wallet.
+ *
+ * This hook enables you to make API calls that require payment without manually handling the payment flow.
+ * Responses are automatically parsed as JSON by default (can be customized with `parseAs` option).
+ *
+ * When a 402 response is received, it will automatically:
+ * 1. Parse the payment requirements
+ * 2. Verify the payment amount is within the allowed maximum
+ * 3. Create a payment header using the connected wallet
+ * 4. Retry the request with the payment header
+ *
+ * If payment fails (e.g. insufficient funds), a modal will be shown to help the user resolve the issue.
+ * If no wallet is connected, a sign-in modal will be shown to connect a wallet.
+ *
+ * @param client - The thirdweb client used to access RPC infrastructure
+ * @param options - Optional configuration for payment handling
+ * @param options.maxValue - The maximum allowed payment amount in base units
+ * @param options.paymentRequirementsSelector - Custom function to select payment requirements from available options
+ * @param options.parseAs - How to parse the response: "json" (default), "text", or "raw"
+ * @param options.uiEnabled - Whether to show the UI for connection, funding or payment retries (defaults to true). Set to false to handle errors yourself
+ * @param options.theme - Theme for the payment error modal (defaults to "dark")
+ * @param options.fundWalletOptions - Customize the BuyWidget shown when user needs to fund their wallet
+ * @param options.connectOptions - Customize the ConnectModal shown when user needs to sign in
+ * @param options.signInRequiredModal - Customize the SignInRequiredModal shown when user needs to sign in (title, description, buttonLabel)
+ * @returns An object containing:
+ * - `fetchWithPayment`: Function to make fetch requests with automatic payment handling (returns parsed data)
+ * - `isPending`: Boolean indicating if a request is in progress
+ * - `error`: Any error that occurred during the request
+ * - `data`: The parsed response data (JSON by default, or based on `parseAs` option)
+ * - Other mutation properties from React Query
+ *
+ * @example
+ * ```tsx
+ * import { useFetchWithPayment } from "thirdweb/react";
+ * import { createThirdwebClient } from "thirdweb";
+ *
+ * const client = createThirdwebClient({ clientId: "your-client-id" });
+ *
+ * function MyComponent() {
+ *   const { fetchWithPayment, isPending } = useFetchWithPayment(client);
+ *
+ *   const handleApiCall = async () => {
+ *     // Response is automatically parsed as JSON
+ *     const data = await fetchWithPayment('https://api.example.com/paid-endpoint');
+ *     console.log(data);
+ *   };
+ *
+ *   return (
+ *     <button onClick={handleApiCall} disabled={isPending}>
+ *       {isPending ? 'Loading...' : 'Make Paid API Call'}
+ *     </button>
+ *   );
+ * }
+ * ```
+ *
+ * ### Customize response parsing
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   parseAs: "text", // Get response as text instead of JSON
+ * });
+ *
+ * const textData = await fetchWithPayment('https://api.example.com/endpoint');
+ * ```
+ *
+ * ### Customize payment options
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   maxValue: 5000000n, // 5 USDC in base units
+ *   theme: "light",
+ *   paymentRequirementsSelector: (requirements) => {
+ *     // Custom logic to select preferred payment method
+ *     return requirements[0];
+ *   }
+ * });
+ * ```
+ *
+ * ### Customize the fund wallet widget
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   fundWalletOptions: {
+ *     title: "Add Funds",
+ *     description: "You need more tokens to complete this payment",
+ *     buttonLabel: "Get Tokens",
+ *   }
+ * });
+ * ```
+ *
+ * ### Customize the connect modal
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   connectOptions: {
+ *     wallets: [inAppWallet(), createWallet("io.metamask")],
+ *     title: "Sign in to continue",
+ *   }
+ * });
+ * ```
+ *
+ * ### Customize the sign in required modal
+ * ```tsx
+ * const { fetchWithPayment } = useFetchWithPayment(client, {
+ *   signInRequiredModal: {
+ *     title: "Authentication Required",
+ *     description: "Please sign in to access this paid content.",
+ *     buttonLabel: "Connect Wallet",
+ *   }
+ * });
+ * ```
+ *
+ * ### Disable the UI and handle errors yourself
+ * ```tsx
+ * const { fetchWithPayment, error } = useFetchWithPayment(client, {
+ *   uiEnabled: false,
+ * });
+ *
+ * // Handle the error manually
+ * if (error) {
+ *   console.error("Payment failed:", error);
+ * }
+ * ```
+ *
+ * @x402
+ */
+export declare function useFetchWithPayment(client: ThirdwebClient, options?: UseFetchWithPaymentConfig): {
+    data: undefined;
+    variables: undefined;
+    error: null;
+    isError: false;
+    isIdle: true;
+    isPending: false;
+    isSuccess: false;
+    status: "idle";
+    mutate: import("@tanstack/react-query").UseMutateFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    reset: () => void;
+    context: unknown;
+    failureCount: number;
+    failureReason: Error | null;
+    isPaused: boolean;
+    submittedAt: number;
+    mutateAsync: import("@tanstack/react-query").UseMutateAsyncFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    fetchWithPayment: (input: RequestInfo, init?: RequestInit) => Promise<unknown>;
+} | {
+    data: undefined;
+    variables: {
+        input: RequestInfo;
+        init?: RequestInit;
+    };
+    error: null;
+    isError: false;
+    isIdle: false;
+    isPending: true;
+    isSuccess: false;
+    status: "pending";
+    mutate: import("@tanstack/react-query").UseMutateFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    reset: () => void;
+    context: unknown;
+    failureCount: number;
+    failureReason: Error | null;
+    isPaused: boolean;
+    submittedAt: number;
+    mutateAsync: import("@tanstack/react-query").UseMutateAsyncFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    fetchWithPayment: (input: RequestInfo, init?: RequestInit) => Promise<unknown>;
+} | {
+    data: undefined;
+    error: Error;
+    variables: {
+        input: RequestInfo;
+        init?: RequestInit;
+    };
+    isError: true;
+    isIdle: false;
+    isPending: false;
+    isSuccess: false;
+    status: "error";
+    mutate: import("@tanstack/react-query").UseMutateFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    reset: () => void;
+    context: unknown;
+    failureCount: number;
+    failureReason: Error | null;
+    isPaused: boolean;
+    submittedAt: number;
+    mutateAsync: import("@tanstack/react-query").UseMutateAsyncFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    fetchWithPayment: (input: RequestInfo, init?: RequestInit) => Promise<unknown>;
+} | {
+    data: unknown;
+    error: null;
+    variables: {
+        input: RequestInfo;
+        init?: RequestInit;
+    };
+    isError: false;
+    isIdle: false;
+    isPending: false;
+    isSuccess: true;
+    status: "success";
+    mutate: import("@tanstack/react-query").UseMutateFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    reset: () => void;
+    context: unknown;
+    failureCount: number;
+    failureReason: Error | null;
+    isPaused: boolean;
+    submittedAt: number;
+    mutateAsync: import("@tanstack/react-query").UseMutateAsyncFunction<unknown, Error, {
+        input: RequestInfo;
+        init?: RequestInit;
+    }, unknown>;
+    fetchWithPayment: (input: RequestInfo, init?: RequestInit) => Promise<unknown>;
+};
+//# sourceMappingURL=useFetchWithPayment.d.ts.map

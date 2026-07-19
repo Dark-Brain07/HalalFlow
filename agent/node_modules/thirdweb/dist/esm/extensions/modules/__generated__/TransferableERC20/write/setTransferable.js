@@ -1,0 +1,111 @@
+import { prepareContractCall } from "../../../../../transaction/prepare-contract-call.js";
+import { encodeAbiParameters } from "../../../../../utils/abi/encodeAbiParameters.js";
+import { detectMethod } from "../../../../../utils/bytecode/detectExtension.js";
+import { once } from "../../../../../utils/promise/once.js";
+export const FN_SELECTOR = "0x9cd23707";
+const FN_INPUTS = [
+    {
+        name: "enableTransfer",
+        type: "bool",
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `setTransferable` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `setTransferable` method is supported.
+ * @modules TransferableERC20
+ * @example
+ * ```ts
+ * import { TransferableERC20 } from "thirdweb/modules";
+ *
+ * const supported = TransferableERC20.isSetTransferableSupported(["0x..."]);
+ * ```
+ */
+export function isSetTransferableSupported(availableSelectors) {
+    return detectMethod({
+        availableSelectors,
+        method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "setTransferable" function.
+ * @param options - The options for the setTransferable function.
+ * @returns The encoded ABI parameters.
+ * @modules TransferableERC20
+ * @example
+ * ```ts
+ * import { TransferableERC20 } from "thirdweb/modules";
+ * const result = TransferableERC20.encodeSetTransferableParams({
+ *  enableTransfer: ...,
+ * });
+ * ```
+ */
+export function encodeSetTransferableParams(options) {
+    return encodeAbiParameters(FN_INPUTS, [options.enableTransfer]);
+}
+/**
+ * Encodes the "setTransferable" function into a Hex string with its parameters.
+ * @param options - The options for the setTransferable function.
+ * @returns The encoded hexadecimal string.
+ * @modules TransferableERC20
+ * @example
+ * ```ts
+ * import { TransferableERC20 } from "thirdweb/modules";
+ * const result = TransferableERC20.encodeSetTransferable({
+ *  enableTransfer: ...,
+ * });
+ * ```
+ */
+export function encodeSetTransferable(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (FN_SELECTOR +
+        encodeSetTransferableParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "setTransferable" function on the contract.
+ * @param options - The options for the "setTransferable" function.
+ * @returns A prepared transaction object.
+ * @modules TransferableERC20
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { TransferableERC20 } from "thirdweb/modules";
+ *
+ * const transaction = TransferableERC20.setTransferable({
+ *  contract,
+ *  enableTransfer: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+export function setTransferable(options) {
+    const asyncOptions = once(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return prepareContractCall({
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+        contract: options.contract,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        method: [FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [resolvedOptions.enableTransfer];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+    });
+}
+//# sourceMappingURL=setTransferable.js.map

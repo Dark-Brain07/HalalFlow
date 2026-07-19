@@ -1,0 +1,1 @@
+{"version":3,"file":"RewardsClaimed.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc20/__generated__/IStaking20/events/RewardsClaimed.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAarE;;;;;;;;;;;;;;;;;;;GAmBG;AACH,MAAM,UAAU,mBAAmB,CAAC,UAAsC,EAAE;IAC1E,OAAO,YAAY,CAAC;QAClB,OAAO;QACP,SAAS,EACP,oEAAoE;KACvE,CAAC,CAAC;AACL,CAAC"}

@@ -1,0 +1,60 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.requestWithRetries = requestWithRetries;
+const INITIAL_RETRY_DELAY = 1000; // in milliseconds
+const MAX_RETRY_DELAY = 60000; // in milliseconds
+const DEFAULT_MAX_RETRIES = 2;
+const JITTER_FACTOR = 0.2; // 20% random jitter
+function isRetryableStatusCode(statusCode) {
+    return [408, 429].includes(statusCode) || statusCode >= 500;
+}
+function addPositiveJitter(delay) {
+    const jitterMultiplier = 1 + Math.random() * JITTER_FACTOR;
+    return delay * jitterMultiplier;
+}
+function addSymmetricJitter(delay) {
+    const jitterMultiplier = 1 + (Math.random() - 0.5) * JITTER_FACTOR;
+    return delay * jitterMultiplier;
+}
+function getRetryDelayFromHeaders(response, retryAttempt) {
+    const retryAfter = response.headers.get("Retry-After");
+    if (retryAfter) {
+        const retryAfterSeconds = parseInt(retryAfter, 10);
+        if (!Number.isNaN(retryAfterSeconds) && retryAfterSeconds > 0) {
+            return Math.min(retryAfterSeconds * 1000, MAX_RETRY_DELAY);
+        }
+        const retryAfterDate = new Date(retryAfter);
+        if (!Number.isNaN(retryAfterDate.getTime())) {
+            const delay = retryAfterDate.getTime() - Date.now();
+            if (delay > 0) {
+                return Math.min(Math.max(delay, 0), MAX_RETRY_DELAY);
+            }
+        }
+    }
+    const rateLimitReset = response.headers.get("X-RateLimit-Reset");
+    if (rateLimitReset) {
+        const resetTime = parseInt(rateLimitReset, 10);
+        if (!Number.isNaN(resetTime)) {
+            const delay = resetTime * 1000 - Date.now();
+            if (delay > 0) {
+                return addPositiveJitter(Math.min(delay, MAX_RETRY_DELAY));
+            }
+        }
+    }
+    return addSymmetricJitter(Math.min(INITIAL_RETRY_DELAY * 2 ** retryAttempt, MAX_RETRY_DELAY));
+}
+async function requestWithRetries(requestFn, maxRetries = DEFAULT_MAX_RETRIES) {
+    let response = await requestFn();
+    for (let i = 0; i < maxRetries; ++i) {
+        if (isRetryableStatusCode(response.status)) {
+            const delay = getRetryDelayFromHeaders(response, i);
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            response = await requestFn();
+        }
+        else {
+            break;
+        }
+    }
+    return response;
+}
+//# sourceMappingURL=requestWithRetries.js.map

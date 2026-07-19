@@ -1,0 +1,26 @@
+import type { Chain } from "../../../chains/types.js";
+import type { ThirdwebClient } from "../../../client/client.js";
+import type { PreparedTransaction } from "../../../transaction/prepare-transaction.js";
+export declare const ARB_WASM_ADDRESS = "0x0000000000000000000000000000000000000071";
+export type ActivateStylusContractOptions = {
+    chain: Chain;
+    client: ThirdwebClient;
+    contractAddress: string;
+};
+/**
+ * Activate a stylus contract by calling ArbWasm Precompile
+ * @param options - The options for activating the contract
+ * @returns A prepared transaction to send
+ * @example
+ * ```ts
+ * import { activateStylusContract } from "thirdweb/stylus";
+ * const transaction = activateStylusContract({
+ *  client,
+ *  chain,
+ *  contractAddress,
+ * });
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+export declare function activateStylusContract(options: ActivateStylusContractOptions): Promise<PreparedTransaction<any, import("abitype").AbiFunction, import("../../../transaction/prepare-transaction.js").PrepareTransactionOptions>>;
+//# sourceMappingURL=activateStylusContract.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"is-smart-wallet.d.ts","sourceRoot":"","sources":["../../../../src/wallets/smart/is-smart-wallet.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,MAAM,EAAE,MAAM,yBAAyB,CAAC;AAEtD;;;;;;GAMG;AACH,wBAAgB,aAAa,CAAC,YAAY,CAAC,EAAE,MAAM,GAAG,OAAO,CAoB5D;AAED;;GAEG;AACH,wBAAgB,+BAA+B,CAAC,MAAM,EAAE,MAAM,GAAG,SAAS,WA0CzE"}

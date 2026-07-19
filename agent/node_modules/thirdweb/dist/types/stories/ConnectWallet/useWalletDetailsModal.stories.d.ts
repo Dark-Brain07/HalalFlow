@@ -1,0 +1,23 @@
+import type { Meta } from "@storybook/react-vite";
+declare const meta: Meta;
+export default meta;
+export declare function BasicUsage(): import("react/jsx-runtime").JSX.Element;
+export declare function DisableLinkingProfiles(): import("react/jsx-runtime").JSX.Element;
+export declare function HideSwitchWallet(): import("react/jsx-runtime").JSX.Element;
+export declare function HideDisconnect(): import("react/jsx-runtime").JSX.Element;
+export declare function HideSendFunds(): import("react/jsx-runtime").JSX.Element;
+export declare function HideReceiveFunds(): import("react/jsx-runtime").JSX.Element;
+export declare function HideBuyFunds(): import("react/jsx-runtime").JSX.Element;
+export declare function HideAllTopButtons(): import("react/jsx-runtime").JSX.Element;
+export declare function Chains(): import("react/jsx-runtime").JSX.Element;
+export declare function Locale(): import("react/jsx-runtime").JSX.Element;
+export declare function ConnectedAccountAvatarUrl(): import("react/jsx-runtime").JSX.Element;
+export declare function ConnectedAccountName(): import("react/jsx-runtime").JSX.Element;
+export declare function ShowBalanceInFiat(): import("react/jsx-runtime").JSX.Element;
+export declare function AssetTabs(): import("react/jsx-runtime").JSX.Element;
+export declare function OnClose(): import("react/jsx-runtime").JSX.Element;
+export declare function Footer(): import("react/jsx-runtime").JSX.Element;
+export declare function ConnectOptions(): import("react/jsx-runtime").JSX.Element;
+export declare function LightTheme(): import("react/jsx-runtime").JSX.Element;
+export declare function CustomLightTheme(): import("react/jsx-runtime").JSX.Element;
+//# sourceMappingURL=useWalletDetailsModal.stories.d.ts.map

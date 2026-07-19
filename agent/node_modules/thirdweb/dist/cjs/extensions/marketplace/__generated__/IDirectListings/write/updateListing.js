@@ -1,0 +1,159 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isUpdateListingSupported = isUpdateListingSupported;
+exports.encodeUpdateListingParams = encodeUpdateListingParams;
+exports.encodeUpdateListing = encodeUpdateListing;
+exports.updateListing = updateListing;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0x07b67758";
+const FN_INPUTS = [
+    {
+        name: "_listingId",
+        type: "uint256",
+    },
+    {
+        components: [
+            {
+                name: "assetContract",
+                type: "address",
+            },
+            {
+                name: "tokenId",
+                type: "uint256",
+            },
+            {
+                name: "quantity",
+                type: "uint256",
+            },
+            {
+                name: "currency",
+                type: "address",
+            },
+            {
+                name: "pricePerToken",
+                type: "uint256",
+            },
+            {
+                name: "startTimestamp",
+                type: "uint128",
+            },
+            {
+                name: "endTimestamp",
+                type: "uint128",
+            },
+            {
+                name: "reserved",
+                type: "bool",
+            },
+        ],
+        name: "_params",
+        type: "tuple",
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `updateListing` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `updateListing` method is supported.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { isUpdateListingSupported } from "thirdweb/extensions/marketplace";
+ *
+ * const supported = isUpdateListingSupported(["0x..."]);
+ * ```
+ */
+function isUpdateListingSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "updateListing" function.
+ * @param options - The options for the updateListing function.
+ * @returns The encoded ABI parameters.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeUpdateListingParams } from "thirdweb/extensions/marketplace";
+ * const result = encodeUpdateListingParams({
+ *  listingId: ...,
+ *  params: ...,
+ * });
+ * ```
+ */
+function encodeUpdateListingParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [options.listingId, options.params]);
+}
+/**
+ * Encodes the "updateListing" function into a Hex string with its parameters.
+ * @param options - The options for the updateListing function.
+ * @returns The encoded hexadecimal string.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { encodeUpdateListing } from "thirdweb/extensions/marketplace";
+ * const result = encodeUpdateListing({
+ *  listingId: ...,
+ *  params: ...,
+ * });
+ * ```
+ */
+function encodeUpdateListing(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeUpdateListingParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "updateListing" function on the contract.
+ * @param options - The options for the "updateListing" function.
+ * @returns A prepared transaction object.
+ * @extension MARKETPLACE
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { updateListing } from "thirdweb/extensions/marketplace";
+ *
+ * const transaction = updateListing({
+ *  contract,
+ *  listingId: ...,
+ *  params: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function updateListing(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+        contract: options.contract,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [resolvedOptions.listingId, resolvedOptions.params];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+    });
+}
+//# sourceMappingURL=updateListing.js.map

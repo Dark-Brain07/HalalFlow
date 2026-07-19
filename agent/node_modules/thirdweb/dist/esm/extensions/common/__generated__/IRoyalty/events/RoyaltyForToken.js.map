@@ -1,0 +1,1 @@
+{"version":3,"file":"RoyaltyForToken.js","sourceRoot":"","sources":["../../../../../../../src/extensions/common/__generated__/IRoyalty/events/RoyaltyForToken.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAkBrE;;;;;;;;;;;;;;;;;;;;GAoBG;AACH,MAAM,UAAU,oBAAoB,CAClC,UAAuC,EAAE;IAEzC,OAAO,YAAY,CAAC;QAClB,OAAO;QACP,SAAS,EACP,sGAAsG;KACzG,CAAC,CAAC;AACL,CAAC"}

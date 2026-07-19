@@ -1,0 +1,13 @@
+import type { Chain } from "../../../../../../../chains/types.js";
+import type { ThirdwebClient } from "../../../../../../../client/client.js";
+import type { SupportedFiatCurrency } from "../../../../../../../pay/convert/type.js";
+import type { TextProps } from "../../../../components/text.js";
+import type { ERC20OrNativeToken } from "../../nativeToken.js";
+export declare function FiatValue(props: {
+    tokenAmount: string;
+    token: ERC20OrNativeToken;
+    chain: Chain;
+    client: ThirdwebClient;
+    currency?: SupportedFiatCurrency;
+} & TextProps): import("react/jsx-runtime").JSX.Element | null;
+//# sourceMappingURL=FiatValue.d.ts.map

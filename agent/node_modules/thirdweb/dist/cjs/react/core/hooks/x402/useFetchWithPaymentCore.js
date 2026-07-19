@@ -1,0 +1,115 @@
+"use strict";
+"use client";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.useFetchWithPaymentCore = useFetchWithPaymentCore;
+const react_query_1 = require("@tanstack/react-query");
+const fetchWithPayment_js_1 = require("../../../../x402/fetchWithPayment.js");
+const useActiveWallet_js_1 = require("../wallets/useActiveWallet.js");
+/**
+ * Core hook for fetch with payment functionality.
+ * This is the platform-agnostic implementation used by both web and native versions.
+ * @internal
+ */
+function useFetchWithPaymentCore(client, options, showErrorModal, showConnectModal) {
+    const wallet = (0, useActiveWallet_js_1.useActiveWallet)();
+    const mutation = (0, react_query_1.useMutation)({
+        mutationFn: async ({ input, init, }) => {
+            // Recursive function that handles fetch + 402 error + retry
+            const executeFetch = async (currentWallet = wallet) => {
+                if (!currentWallet) {
+                    // If a connect modal handler is provided, show the connect modal
+                    if (showConnectModal) {
+                        return new Promise((resolve, reject) => {
+                            showConnectModal({
+                                onConnect: async (newWallet) => {
+                                    // After connection, retry the fetch with the newly connected wallet
+                                    try {
+                                        const result = await executeFetch(newWallet);
+                                        resolve(result);
+                                    }
+                                    catch (error) {
+                                        reject(error);
+                                    }
+                                },
+                                onCancel: () => {
+                                    reject(new Error("Wallet connection cancelled by user"));
+                                },
+                            });
+                        });
+                    }
+                    // If no connect modal handler, throw an error
+                    throw new Error("No wallet connected. Please connect your wallet to make paid API calls.");
+                }
+                const wrappedFetch = (0, fetchWithPayment_js_1.wrapFetchWithPayment)(globalThis.fetch, client, currentWallet, {
+                    maxValue: options?.maxValue,
+                    paymentRequirementsSelector: options?.paymentRequirementsSelector,
+                    storage: options?.storage,
+                });
+                const response = await wrappedFetch(input, init);
+                // Check if we got a 402 response (payment error)
+                if (response.status === 402) {
+                    try {
+                        const errorBody = (await response.json());
+                        // If a modal handler is provided, show the modal and handle retry/cancel
+                        if (showErrorModal) {
+                            return new Promise((resolve, reject) => {
+                                showErrorModal({
+                                    errorData: errorBody,
+                                    onRetry: async () => {
+                                        // Retry the entire fetch+error handling logic recursively
+                                        // Pass currentWallet to avoid re-showing connect modal with stale wallet state
+                                        try {
+                                            const result = await executeFetch(currentWallet);
+                                            resolve(result);
+                                        }
+                                        catch (error) {
+                                            reject(error);
+                                        }
+                                    },
+                                    onCancel: () => {
+                                        reject(new Error("Payment cancelled by user"));
+                                    },
+                                });
+                            });
+                        }
+                        // If no modal handler, throw the error with details
+                        throw new Error(errorBody.errorMessage || `Payment failed: ${errorBody.error}`);
+                    }
+                    catch (_parseError) {
+                        // If we can't parse the error body, throw a generic error
+                        throw new Error("Payment failed with status 402");
+                    }
+                }
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Payment failed with status ${response.status} ${response.statusText} - ${errorText || "Unknown error"}`);
+                }
+                const parseAs = options?.parseAs ?? "json";
+                return parseResponse(response, parseAs);
+            };
+            // Start the fetch process
+            return executeFetch();
+        },
+    });
+    return {
+        fetchWithPayment: async (input, init) => {
+            return mutation.mutateAsync({ input, init });
+        },
+        ...mutation,
+    };
+}
+function parseResponse(response, parseAs) {
+    if (parseAs === "json") {
+        return response.json();
+    }
+    else if (parseAs === "text") {
+        return response.text();
+    }
+    else if (parseAs === "raw") {
+        return response;
+    }
+    else {
+        throw new Error(`Invalid parseAs option: ${parseAs}`);
+    }
+}
+//# sourceMappingURL=useFetchWithPaymentCore.js.map

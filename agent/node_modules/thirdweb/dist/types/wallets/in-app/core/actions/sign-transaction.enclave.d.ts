@@ -1,0 +1,8 @@
+import type { ThirdwebClient } from "../../../../client/client.js";
+import type { ClientScopedStorage } from "../authentication/client-scoped-storage.js";
+export declare function signTransaction({ client, payload, storage, }: {
+    client: ThirdwebClient;
+    payload: Record<string, unknown>;
+    storage: ClientScopedStorage;
+}): Promise<`0x${string}`>;
+//# sourceMappingURL=sign-transaction.enclave.d.ts.map

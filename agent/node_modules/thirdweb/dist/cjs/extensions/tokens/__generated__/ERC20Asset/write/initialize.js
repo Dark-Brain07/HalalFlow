@@ -1,0 +1,158 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isInitializeSupported = isInitializeSupported;
+exports.encodeInitializeParams = encodeInitializeParams;
+exports.encodeInitialize = encodeInitialize;
+exports.initialize = initialize;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0x30a8ff4e";
+const FN_INPUTS = [
+    {
+        type: "string",
+        name: "name",
+    },
+    {
+        type: "string",
+        name: "symbol",
+    },
+    {
+        type: "string",
+        name: "contractURI",
+    },
+    {
+        type: "uint256",
+        name: "maxSupply",
+    },
+    {
+        type: "address",
+        name: "owner",
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `initialize` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `initialize` method is supported.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { isInitializeSupported } from "thirdweb/extensions/tokens";
+ *
+ * const supported = isInitializeSupported(["0x..."]);
+ * ```
+ */
+function isInitializeSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "initialize" function.
+ * @param options - The options for the initialize function.
+ * @returns The encoded ABI parameters.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { encodeInitializeParams } from "thirdweb/extensions/tokens";
+ * const result = encodeInitializeParams({
+ *  name: ...,
+ *  symbol: ...,
+ *  contractURI: ...,
+ *  maxSupply: ...,
+ *  owner: ...,
+ * });
+ * ```
+ */
+function encodeInitializeParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [
+        options.name,
+        options.symbol,
+        options.contractURI,
+        options.maxSupply,
+        options.owner,
+    ]);
+}
+/**
+ * Encodes the "initialize" function into a Hex string with its parameters.
+ * @param options - The options for the initialize function.
+ * @returns The encoded hexadecimal string.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { encodeInitialize } from "thirdweb/extensions/tokens";
+ * const result = encodeInitialize({
+ *  name: ...,
+ *  symbol: ...,
+ *  contractURI: ...,
+ *  maxSupply: ...,
+ *  owner: ...,
+ * });
+ * ```
+ */
+function encodeInitialize(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeInitializeParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "initialize" function on the contract.
+ * @param options - The options for the "initialize" function.
+ * @returns A prepared transaction object.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { initialize } from "thirdweb/extensions/tokens";
+ *
+ * const transaction = initialize({
+ *  contract,
+ *  name: ...,
+ *  symbol: ...,
+ *  contractURI: ...,
+ *  maxSupply: ...,
+ *  owner: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function initialize(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        contract: options.contract,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [
+                resolvedOptions.name,
+                resolvedOptions.symbol,
+                resolvedOptions.contractURI,
+                resolvedOptions.maxSupply,
+                resolvedOptions.owner,
+            ];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+    });
+}
+//# sourceMappingURL=initialize.js.map

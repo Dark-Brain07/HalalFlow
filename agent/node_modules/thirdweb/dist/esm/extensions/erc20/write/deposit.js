@@ -1,0 +1,32 @@
+import { prepareContractCall } from "../../../transaction/prepare-contract-call.js";
+import { toWei } from "../../../utils/units.js";
+import { FN_SELECTOR } from "../__generated__/IWETH/write/deposit.js";
+/**
+ * Calls the "deposit" function on the contract (useful to wrap ETH).
+ * @param options - The options for the "deposit" function.
+ * @returns A prepared transaction object.
+ * @extension ERC20
+ * @example
+ * ```ts
+ * import { deposit } from "thirdweb/extensions/erc20";
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = deposit({ contract, amount: "0.1" });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+export function deposit(options) {
+    const value = "amountWei" in options ? options.amountWei : toWei(options.amount);
+    return prepareContractCall({
+        contract: options.contract,
+        erc20Value: {
+            amountWei: value,
+            tokenAddress: options.contract.address,
+        },
+        method: [FN_SELECTOR, [], []],
+        value,
+        ...options.overrides,
+    });
+}
+//# sourceMappingURL=deposit.js.map

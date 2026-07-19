@@ -1,0 +1,34 @@
+import type { BaseTransactionOptions, WithOverrides } from "../../../../transaction/types.js";
+/**
+ * Reset the claim eligibility for all users.
+ * This method is only available on the `DropERC721` contract.
+ * @param options
+ * @returns the prepared transaction
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { resetClaimEligibility } from "thirdweb/extensions/erc721";
+ * import { sendTransaction } from "thirdweb";
+ *
+ * const transaction = resetClaimEligibility({
+ *  contract,
+ * });
+ *
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+export declare function resetClaimEligibility(options: BaseTransactionOptions<WithOverrides<{}>>): import("../../../../transaction/prepare-transaction.js").PreparedTransaction<any, import("abitype").AbiFunction, import("../../../../transaction/prepare-transaction.js").PrepareTransactionOptions>;
+/**
+ * Checks if the `resetClaimEligibility` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `resetClaimEligibility` method is supported.
+ * @extension ERC721
+ * @example
+ * ```ts
+ * import { isResetClaimEligibilitySupported } from "thirdweb/extensions/erc721";
+ *
+ * const supported = isResetClaimEligibilitySupported(["0x..."]);
+ * ```
+ */
+export declare function isResetClaimEligibilitySupported(availableSelectors: string[]): boolean;
+//# sourceMappingURL=resetClaimEligibility.d.ts.map

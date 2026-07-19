@@ -1,0 +1,29 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authOptions = exports.socialAuthOptions = void 0;
+exports.socialAuthOptions = [
+    "google",
+    "apple",
+    "facebook",
+    "discord",
+    "line",
+    "x",
+    "tiktok",
+    "epic",
+    "coinbase",
+    "farcaster",
+    "telegram",
+    "github",
+    "twitch",
+    "steam",
+];
+exports.authOptions = [
+    ...exports.socialAuthOptions,
+    "guest",
+    "backend",
+    "email",
+    "phone",
+    "passkey",
+    "wallet",
+];
+//# sourceMappingURL=types.js.map

@@ -1,0 +1,12 @@
+import { jsx as _jsx } from "react/jsx-runtime";
+import { spacing } from "../../../core/design-system/index.js";
+/**
+ * @internal
+ */
+export const Spacer = ({ y }) => {
+    return (_jsx("div", { style: {
+            height: spacing[y],
+            flexShrink: 0,
+        } }));
+};
+//# sourceMappingURL=Spacer.js.map

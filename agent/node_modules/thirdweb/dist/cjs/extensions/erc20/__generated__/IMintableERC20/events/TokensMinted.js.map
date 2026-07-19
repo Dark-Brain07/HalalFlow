@@ -1,0 +1,1 @@
+{"version":3,"file":"TokensMinted.js","sourceRoot":"","sources":["../../../../../../../src/extensions/erc20/__generated__/IMintableERC20/events/TokensMinted.ts"],"names":[],"mappings":";;AAkCA,8CAMC;AAvCD,4EAAqE;AAarE;;;;;;;;;;;;;;;;;;;GAmBG;AACH,SAAgB,iBAAiB,CAAC,UAAoC,EAAE;IACtE,OAAO,IAAA,+BAAY,EAAC;QAClB,OAAO;QACP,SAAS,EACP,sEAAsE;KACzE,CAAC,CAAC;AACL,CAAC"}

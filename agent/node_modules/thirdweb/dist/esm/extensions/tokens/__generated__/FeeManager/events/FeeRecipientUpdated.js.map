@@ -1,0 +1,1 @@
+{"version":3,"file":"FeeRecipientUpdated.js","sourceRoot":"","sources":["../../../../../../../src/extensions/tokens/__generated__/FeeManager/events/FeeRecipientUpdated.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,uCAAuC,CAAC;AAErE;;;;;;;;;;;;;;;;GAgBG;AACH,MAAM,UAAU,wBAAwB;IACtC,OAAO,YAAY,CAAC;QAClB,SAAS,EAAE,iDAAiD;KAC7D,CAAC,CAAC;AACL,CAAC"}

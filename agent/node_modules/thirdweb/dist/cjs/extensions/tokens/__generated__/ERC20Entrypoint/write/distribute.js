@@ -1,0 +1,135 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FN_SELECTOR = void 0;
+exports.isDistributeSupported = isDistributeSupported;
+exports.encodeDistributeParams = encodeDistributeParams;
+exports.encodeDistribute = encodeDistribute;
+exports.distribute = distribute;
+const prepare_contract_call_js_1 = require("../../../../../transaction/prepare-contract-call.js");
+const encodeAbiParameters_js_1 = require("../../../../../utils/abi/encodeAbiParameters.js");
+const detectExtension_js_1 = require("../../../../../utils/bytecode/detectExtension.js");
+const once_js_1 = require("../../../../../utils/promise/once.js");
+exports.FN_SELECTOR = "0xe542b93b";
+const FN_INPUTS = [
+    {
+        type: "address",
+        name: "asset",
+    },
+    {
+        type: "tuple[]",
+        name: "contents",
+        components: [
+            {
+                type: "uint256",
+                name: "amount",
+            },
+            {
+                type: "address",
+                name: "recipient",
+            },
+        ],
+    },
+];
+const FN_OUTPUTS = [];
+/**
+ * Checks if the `distribute` method is supported by the given contract.
+ * @param availableSelectors An array of 4byte function selectors of the contract. You can get this in various ways, such as using "whatsabi" or if you have the ABI of the contract available you can use it to generate the selectors.
+ * @returns A boolean indicating if the `distribute` method is supported.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { isDistributeSupported } from "thirdweb/extensions/tokens";
+ *
+ * const supported = isDistributeSupported(["0x..."]);
+ * ```
+ */
+function isDistributeSupported(availableSelectors) {
+    return (0, detectExtension_js_1.detectMethod)({
+        availableSelectors,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+    });
+}
+/**
+ * Encodes the parameters for the "distribute" function.
+ * @param options - The options for the distribute function.
+ * @returns The encoded ABI parameters.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { encodeDistributeParams } from "thirdweb/extensions/tokens";
+ * const result = encodeDistributeParams({
+ *  asset: ...,
+ *  contents: ...,
+ * });
+ * ```
+ */
+function encodeDistributeParams(options) {
+    return (0, encodeAbiParameters_js_1.encodeAbiParameters)(FN_INPUTS, [options.asset, options.contents]);
+}
+/**
+ * Encodes the "distribute" function into a Hex string with its parameters.
+ * @param options - The options for the distribute function.
+ * @returns The encoded hexadecimal string.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { encodeDistribute } from "thirdweb/extensions/tokens";
+ * const result = encodeDistribute({
+ *  asset: ...,
+ *  contents: ...,
+ * });
+ * ```
+ */
+function encodeDistribute(options) {
+    // we do a "manual" concat here to avoid the overhead of the "concatHex" function
+    // we can do this because we know the specific formats of the values
+    return (exports.FN_SELECTOR +
+        encodeDistributeParams(options).slice(2));
+}
+/**
+ * Prepares a transaction to call the "distribute" function on the contract.
+ * @param options - The options for the "distribute" function.
+ * @returns A prepared transaction object.
+ * @extension TOKENS
+ * @example
+ * ```ts
+ * import { sendTransaction } from "thirdweb";
+ * import { distribute } from "thirdweb/extensions/tokens";
+ *
+ * const transaction = distribute({
+ *  contract,
+ *  asset: ...,
+ *  contents: ...,
+ *  overrides: {
+ *    ...
+ *  }
+ * });
+ *
+ * // Send the transaction
+ * await sendTransaction({ transaction, account });
+ * ```
+ */
+function distribute(options) {
+    const asyncOptions = (0, once_js_1.once)(async () => {
+        return "asyncParams" in options ? await options.asyncParams() : options;
+    });
+    return (0, prepare_contract_call_js_1.prepareContractCall)({
+        contract: options.contract,
+        method: [exports.FN_SELECTOR, FN_INPUTS, FN_OUTPUTS],
+        params: async () => {
+            const resolvedOptions = await asyncOptions();
+            return [resolvedOptions.asset, resolvedOptions.contents];
+        },
+        value: async () => (await asyncOptions()).overrides?.value,
+        accessList: async () => (await asyncOptions()).overrides?.accessList,
+        gas: async () => (await asyncOptions()).overrides?.gas,
+        gasPrice: async () => (await asyncOptions()).overrides?.gasPrice,
+        maxFeePerGas: async () => (await asyncOptions()).overrides?.maxFeePerGas,
+        maxPriorityFeePerGas: async () => (await asyncOptions()).overrides?.maxPriorityFeePerGas,
+        nonce: async () => (await asyncOptions()).overrides?.nonce,
+        extraGas: async () => (await asyncOptions()).overrides?.extraGas,
+        erc20Value: async () => (await asyncOptions()).overrides?.erc20Value,
+        authorizationList: async () => (await asyncOptions()).overrides?.authorizationList,
+    });
+}
+//# sourceMappingURL=distribute.js.map
